@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - CrossWears</title>
+    <link rel="stylesheet" href="style.css"><script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body>
+
+<div class="admin-wrapper">
+    
+    <aside class="admin-sidebar">
+        <div class="sidebar-header">
+            <h2>Admin Panel</h2>
+        </div>
+        
+        <ul class="sidebar-menu">
+            <li class="active" onclick="showSection('dashboard', this)">
+                <i data-lucide="layout-dashboard"></i> Dashboard
+            </li>
+            <li onclick="showSection('orders', this)">
+                <i data-lucide="shopping-bag"></i> Comenzi
+            </li>
+            <li onclick="showSection('products', this)">
+                <i data-lucide="package"></i> Produse
+            </li>
+            <li onclick="showSection('users', this)">
+                <i data-lucide="users"></i> Utilizatori
+            </li>
+            <li onclick="showSection('messages', this)">
+                <i data-lucide="mail"></i> Mesaje
+            </li>
+            <li onclick="showSection('newsletter', this)">
+                <i data-lucide="send"></i> Newsletter
+            </li>
+        </ul>
+
+        <div class="sidebar-footer">
+            <a href="index.html" class="back-home"><i data-lucide="arrow-left"></i> Înapoi pe Site</a>
+        </div>
+    </aside>
+
+    <main class="admin-content">
+        
+        <header class="admin-topbar">
+            <h3>Bun venit, Admin!</h3>
+            <button class="logout-btn">Deconectare</button>
+        </header>
+
+      <section id="dashboard" class="admin-section active-section">
+    <h1>Statistici Generale</h1>
+    <div class="stats-grid">
+        <div class="stat-card">
+            <h3>Vânzări Totale</h3> <p id="stat-sales" class="stat-number">0 RON</p>
+            <i data-lucide="banknote" class="stat-icon"></i>
+        </div>
+        <div class="stat-card">
+            <h3>Comenzi Noi</h3>
+            <p id="stat-orders" class="stat-number">0</p>
+            <i data-lucide="shopping-cart" class="stat-icon"></i>
+        </div>
+        <div class="stat-card">
+            <h3>Clienți Înregistrați</h3>
+            <p id="stat-users" class="stat-number">0</p>
+            <i data-lucide="users" class="stat-icon"></i>
+        </div>
+        <div class="stat-card">
+            <h3>Mesaje Clienți</h3>
+            <p id="stat-messages" class="stat-number">0</p>
+            <i data-lucide="message-square" class="stat-icon"></i>
+        </div>
+    </div>
+</section>
+
+   <section id="orders" class="admin-section" style="display: none;">
+    <h1>Gestionare Comenzi</h1>
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Client</th>
+                    <th>Total</th>
+                    <th>Data</th>
+                    <th>Status</th>
+                    <th>Acțiuni</th>
+                </tr>
+            </thead>
+            <tbody id="orders-tbody">
+                <tr><td colspan="6" style="text-align:center;">Se încarcă comenzile...</td></tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+
+        <section id="products" class="admin-section" style="display: none;">
+    <div class="section-header-flex" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <h1>Gestionare Produse</h1>
+        <a href="addProduct.html" class="btn-small" style="background-color: #00a6ff; text-decoration: none; padding: 10px 15px; font-size: 14px;">+ Adaugă Produs</a>
+    </div>
+
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Imagine</th>
+                    <th>Nume Produs</th>
+                    <th>Preț</th>
+                    <th>Stoc</th>
+                    <th>Acțiuni</th>
+                </tr>
+            </thead>
+            <tbody id="products-tbody">
+                <tr><td colspan="6" style="text-align:center;">Se încarcă produsele...</td></tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+
+       <section id="users" class="admin-section" style="display: none;">
+    <h1>Clienți Înregistrați</h1>
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nume</th>
+                    <th>Email</th>
+                    <th>Rol</th>
+                    <th>Acțiuni</th>
+                </tr>
+            </thead>
+            <tbody id="users-tbody">
+                <tr><td colspan="5" style="text-align:center;">Se încarcă utilizatorii...</td></tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+
+        <section id="messages" class="admin-section" style="display: none;">
+    <h1>Mesaje de Contact</h1>
+    
+    <div class="admin-chat-layout">
+        <aside class="chat-sidebar">
+            <div class="chat-sidebar-header">Inbox Clienți</div>
+            <ul id="clients-list" class="chat-users-list">
+                <li style="padding:15px; text-align:center; color:#999;">Se încarcă...</li>
+            </ul>
+        </aside>
+
+        <main class="chat-main-area">
+            <div id="chat-conversation-header" class="chat-conversation-header">
+                <span>Selectează un client pentru a vedea mesajele</span>
+            </div>
+
+            <div id="admin-messages-box" class="admin-messages-box">
+                </div>
+
+            <div class="admin-chat-input-area" style="display: none;" id="admin-input-container">
+                <input type="text" id="admin-msg-input" placeholder="Scrie un răspuns...">
+                <button onclick="sendAdminMessage()">Trimite</button>
+            </div>
+        </main>
+    </div>
+</section>
+
+       <section id="newsletter" class="admin-section" style="display: none;">
+    <h1>Trimite Newsletter</h1>
+    <div class="newsletter-compose">
+        <input type="text" id="newsletter-subject" placeholder="Subiect Email" class="admin-input">
+        <textarea id="newsletter-content" placeholder="Scrie mesajul tău aici..." class="admin-textarea"></textarea>
+        <button class="btn-send-newsletter" onclick="handleSendNewsletter()">Trimite la toți abonații</button>
+    </div>
+    <div class="table-container card" style="margin-top: 30px;">
+        <h3>Istoric Trimiteri</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Dată</th>
+                    <th>Subiect</th>
+                    <th>Destinatari</th>
+                </tr>
+            </thead>
+            <tbody id="newsletter-history-tbody">
+                </tbody>
+        </table>
+    </div>
+</section>
+
+    </main>
+</div>
+
+<script src="admin.js"></script>
+<script>lucide.createIcons();</script>
+</body>
+</html>

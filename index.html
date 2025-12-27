@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CrossWears</title>
+ <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <!-- Iconițe fontawesome -->
+  <link rel="stylesheet" href="style.css">
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+</head>
+<body>
+
+  <!-- navbar -->
+<header>
+<link rel="stylesheet" href="style.css">
+<script src="https://unpkg.com/lucide@latest"></script>
+
+<nav class="navbar">
+    <div class="nav-left">
+        <a href="index.html" class="nav-logo">
+            <img src="image/logo.png" alt="Logo">
+        </a>
+
+        <ul class="nav-links">
+            <li><a href="index.html" class="active">Home</a></li>
+            <li><a href="shop.html">Shop</a></li>
+            <li><a href="contact.html">Contact</a></li>
+        </ul>
+    </div>
+
+    <div class="nav-right">
+      <div class="cart-wrapper">
+        <a href="cart.html" class="nav-icon" id="cart-nav-link">
+            <i data-lucide="shopping-cart"></i>
+            <span id="cart-count-badge">0</span>
+        </a>
+
+        <div id="mini-cart-popup" class="mini-cart-popup">
+            <div class="mini-cart-header">Rezumat Coș</div>
+            <div id="mini-cart-items" class="mini-cart-body">
+                </div>
+            <div class="mini-cart-footer">
+                <div class="mini-cart-total">Total: <span id="mini-cart-total-price">0</span> RON</div>
+                <a href="cart.html" class="btn-view-cart">Vezi detalii</a>
+            </div>
+        </div>
+    </div>
+
+        <a href="login.html" id="nav-login-btn" class="login-btn">
+            Log In
+        </a>
+
+        <div class="profile-dropdown" id="nav-profile-section" style="display: none;">
+            <a href="#" class="nav-icon">
+                <i data-lucide="user"></i>
+            </a>
+
+            <div class="dropdown-content">
+                <a href="profile.html"><i data-lucide="user-check" style="width:16px;"></i> Contul meu</a>
+                <a href="orders.html"><i data-lucide="package" style="width:16px;"></i> Comenzile mele</a>
+                <a href="favorites.html"><i data-lucide="heart" style="width:16px;"></i> Favorite</a>
+                
+                <a href="admin-dashboard.html" id="admin-link" style="color: #e74c3c; font-weight: 600; display: none;">
+                    <i data-lucide="shield-alert" style="width:16px;"></i> Admin Panel
+                </a>
+                
+                <hr style="border: 0; border-top: 1px solid #eee; margin: 5px 0;">
+                
+                <a href="javascript:void(0)" id="logout-btn" style="color: #666;">Deconectare</a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<script>
+    lucide.createIcons();
+</script>
+</header>
+<main>
+
+
+  <section class="banner">
+  <div class="banner-slider">
+    <div class="slide active" style="background-image: url('carusel/carusel1.jpg');"></div>
+    <div class="slide" style="background-image: url('carusel/carusel2.jpg');"></div>
+    <div class="slide" style="background-image: url('carusel/carusel3.jpg');"></div>
+    <div class="slide" style="background-image: url('carusel/carusel4.jpg');"></div>
+    <div class="slide" style="background-image: url('carusel/carusel5.jpg');"></div>
+  </div>
+
+  <div class="banner-content">
+    <h1>Bun venit la colecția noastră de tricouri</h1>
+    <a href="shop.html"><button>Vezi colecția</button></a>
+  </div>
+</section>
+
+  <!-- Produse -->
+  <section class="products" id="shop">
+    <h2>Produse Noi</h2>
+    <div class="product-grid">
+      <!-- Produs 1 -->
+      <div class="product-card">
+        <div class="product-inner">
+          <div class="product-front">
+            <a><img src="image/tricou1-front.png" alt="Tricou Față"></a>
+          </div>
+          <div class="product-back">
+            <a><img src="image/tricou1-back.png" alt="Tricou Spate"></a>
+          </div>
+        </div>
+      </div>
+      <!-- Produs 2 -->
+      <div class="product-card">
+        <div class="product-inner">
+          <div class="product-front">
+            <a><img src="image/tricou2-front.png" alt="Tricou Față"></a>
+          </div>
+          <div class="product-back">
+            <a><img src="image/tricou2-back.png" alt="Tricou Spate"></a>
+          </div>
+        </div>
+      </div>
+      <!-- Produs 3 -->
+      <div class="product-card">
+        <div class="product-inner">
+          <div class="product-front">
+            <a><img src="image/tricou3-front.png" alt="Tricou Față"></a>
+          </div>
+          <div class="product-back">
+            <a><img src="image/tricou3-back.png" alt="Tricou Spate"></a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+  <!-- Footer -->
+ <footer>
+  <div class="container">
+
+    <div class="sec about">
+      <h2>CrossWears</h2>
+      <p>
+      Suntem dedicați răspândirii Evangheliei prin artă vestimentară. 
+      Fiecare tricou este o mărturie și o invitație la dialog. 
+      Purtăm Credința cu Mândrie.
+      </p>
+    </div>
+
+       <div class="sec office">
+      <h2>Office</h2>
+      <p>Strd. Mihai Eminescu, Nr.10, <br>Sector 7,<br>București,<br>Romania,</p>
+      <p>contact.crosswears@gmail.com</p>
+      <p>+40 723 456 789</p>
+    </div>
+
+    <div class="sec links">
+      <h2>Links</h2>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="shop.html">Shop</a></li>
+        <li><a href="contact.html">Contacts</a></li>
+      </ul>
+    </div>
+
+    <div class="sec newsletter">
+    <h2>Newsletter</h2>
+    <div class="newsletter-box">
+        <input type="email" id="footer-email" placeholder="Enter your email">
+        <button onclick="subscribeNewsletter()">&#10140;</button>
+    </div>
+       <div class="social"> 
+        <a href="https://www.linkedin.com/in/denis-%C8%9Bigan-379a5436a/" target="_blank"><i class="fab fa-facebook"></i></a>
+        <a href="https://www.linkedin.com/in/denis-%C8%9Bigan-379a5436a/" target="_blank"><i class="fab fa-instagram"></i></a>
+        <a href="https://www.linkedin.com/in/denis-%C8%9Bigan-379a5436a/" target="_blank"><i class="fab fa-twitter"></i></a>
+      </div>
+</div>
+
+  </div>
+
+  <p class="copyright">© 2025 CrossWears. Toate drepturile rezervate.</p>
+</footer>
+
+
+<div id="chat-toggle-btn" onclick="toggleChatWindow()">
+    <i class="fas fa-comments"></i>
+</div>
+
+<div id="chat-window" class="chat-container" style="display: none;">
+    
+    <div class="chat-header">
+        <span>💬 Suport Live</span>
+        <button onclick="toggleChatWindow()" class="close-chat-btn">&times;</button>
+    </div>
+
+    <div id="chat-messages" class="chat-messages">
+        <p class="chat-placeholder">Bună! Cu ce te putem ajuta?</p>
+    </div>
+
+    <div class="chat-input-area">
+        <input type="text" id="chat-input" placeholder="Scrie un mesaj..." onkeypress="handleEnter(event)">
+        <button onclick="sendMessage()" class="send-btn">
+            <i class="fas fa-paper-plane"></i>
+        </button>
+    </div>
+</div>
+
+
+<script>
+
+// carusel de imagini
+  const slides = document.querySelectorAll('.banner .slide');
+  let current = 0;
+
+  function nextSlide() {
+    slides[current].classList.remove('active');
+    current = (current + 1) % slides.length;
+    slides[current].classList.add('active');
+  }
+
+  setInterval(nextSlide, 5000); // schimbă imaginea la fiecare 5 secunde
+
+
+
+
+</script>
+    <script src="general.js"></script>
+
+</body>
+</html>
+
+

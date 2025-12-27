@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIGN UP</title>
+    <link rel="stylesheet" href="auth.css">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js0"></script>
+</head>
+<body>
+    <section>
+        <form id="signupForm">
+            <h1>Sign Up</h1>
+            <div class="inputbox">
+                <ion-icon name="person-outline"></ion-icon>
+                <input type="text" id="signup-name" required>
+                <label for="">Name</label>
+            </div>
+            <div class="inputbox">
+                <ion-icon name="mail-outline"></ion-icon>
+                <input type="text" id="signup-email" required>
+                <label for="">Email</label>
+            </div>
+            <div class="inputbox">
+                <ion-icon name="lock-closed-outline"></ion-icon>
+                <input type="password" id="signup-password" required>
+                <label for="">Password</label>
+            </div>
+            <button type="submit">Sign Up</button>
+            <div class="register">
+                <p>Already have an account? <a href="login.html">Log In</a></p>
+            </div>
+        </form>
+    </section>
+
+    <script src="./signup.js"></script>
+</body>
+</html>

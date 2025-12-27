@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Product</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+    <script>
+        const token = localStorage.getItem("userToken");
+        const role = localStorage.getItem("userRole");
+        
+        if (!token || role !== "ROLE_ADMIN") {
+            alert("Acces interzis! Trebuie să fii administrator pentru a edita produse.");
+            window.location.href = "index.html";
+        }
+    </script>
+</head>
+<body>
+
+  <link rel="stylesheet" href="style.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+<nav class="navbar">
+    <div class="nav-left">
+        <a href="index.html" class="nav-logo">
+            <img src="image/logo.png" alt="Logo">
+        </a>
+
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="shop.html" class="active">Shop</a></li>
+            <li><a href="contact.html">Contact</a></li>
+        </ul>
+    </div>
+
+    <div class="nav-right">
+      <div class="cart-wrapper">
+        <a href="cart.html" class="nav-icon" id="cart-nav-link">
+            <i data-lucide="shopping-cart"></i>
+            <span id="cart-count-badge">0</span>
+        </a>
+
+        <div id="mini-cart-popup" class="mini-cart-popup">
+            <div class="mini-cart-header">Rezumat Coș</div>
+            <div id="mini-cart-items" class="mini-cart-body">
+                </div>
+            <div class="mini-cart-footer">
+                <div class="mini-cart-total">Total: <span id="mini-cart-total-price">0</span> RON</div>
+                <a href="cart.html" class="btn-view-cart">Vezi detalii</a>
+            </div>
+        </div>
+    </div>
+
+        <a href="login.html" id="nav-login-btn" class="login-btn">
+            Log In
+        </a>
+
+        <div class="profile-dropdown" id="nav-profile-section" style="display: none;">
+            <a href="#" class="nav-icon">
+                <i data-lucide="user"></i>
+            </a>
+
+            <div class="dropdown-content">
+                <a href="profile.html"><i data-lucide="user-check" style="width:16px;"></i> Contul meu</a>
+                <a href="orders.html"><i data-lucide="package" style="width:16px;"></i> Comenzile mele</a>
+                <a href="favorites.html"><i data-lucide="heart" style="width:16px;"></i> Favorite</a>
+                
+                <a href="admin-dashboard.html" id="admin-link" style="color: #e74c3c; font-weight: 600; display: none;">
+                    <i data-lucide="shield-alert" style="width:16px;"></i> Admin Panel
+                </a>
+                
+                <hr style="border: 0; border-top: 1px solid #eee; margin: 5px 0;">
+                
+                <a href="javascript:void(0)" id="logout-btn" style="color: #666;">Deconectare</a>
+            </div>
+        </div>
+    </div>
+</nav>
+<script>
+    lucide.createIcons();
+</script>
+
+
+   <div class="upd-container">
+        <h2>Actualizare produs</h2>
+
+        <form id="update-form">
+            
+            <label>Nume produs</label>
+            <input type="text" id="productName" required>
+
+            <label>Descriere</label>
+            <textarea id="productDescription" required></textarea>
+
+            <label>Preț</label>
+            <input type="number" id="productPrice" required step="0.01">
+
+            <label>Cantitate în stoc</label>
+            <input type="number" id="quantity" required>
+
+            <label>Disponibil</label>
+            <select id="available">
+                <option value="true">Disponibil</option>
+                <option value="false">Indisponibil</option>
+            </select>
+
+            <label>Imagine nouă (opțional)</label>
+            <input type="file" id="imageFile" accept="image/*">
+
+            <button type="submit" class="btn-save">💾 Salvează modificările</button>
+        </form>
+
+        <p id="responseMsg" style="margin-top: 15px; font-weight: bold;"></p>
+    </div>
+
+
+
+<footer>
+  <div class="container">
+
+    <div class="sec about">
+      <h2>CrossWears</h2>
+      <p>
+      Suntem dedicați răspândirii Evangheliei prin artă vestimentară. 
+      Fiecare tricou este o mărturie și o invitație la dialog. 
+      Purtăm Credința cu Mândrie.
+      </p>
+    </div>
+
+      <div class="sec office">
+      <h2>Office</h2>
+      <p>Strd. Mihai Eminescu, Nr.10, <br>Sector 7,<br>București,<br>Romania,</p>
+      <p>contact.crosswears@gmail.com</p>
+      <p>+40 723 456 789</p>
+    </div>
+
+    <div class="sec links">
+      <h2>Links</h2>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="shop.html">Shop</a></li>
+        <li><a href="contact.html">Contacts</a></li>
+      </ul>
+    </div>
+
+    <div class="sec newsletter">
+    <h2>Newsletter</h2>
+    <div class="newsletter-box">
+        <input type="email" id="footer-email" placeholder="Enter your email">
+        <button onclick="subscribeNewsletter()">&#10140;</button>
+    </div>
+       <div class="social">
+        <a href="https://www.linkedin.com/in/denis-%C8%9Bigan-379a5436a/" target="_blank"><i class="fab fa-facebook"></i></a>
+        <a href="https://www.linkedin.com/in/denis-%C8%9Bigan-379a5436a/" target="_blank"><i class="fab fa-instagram"></i></a>
+        <a href="https://www.linkedin.com/in/denis-%C8%9Bigan-379a5436a/" target="_blank"><i class="fab fa-twitter"></i></a>
+      </div>
+    </div>
+
+  </div>
+
+  <p class="copyright">© 2025 CrossWears. Toate drepturile rezervate.</p>
+</footer>
+
+
+    <script src="updateProduct.js"></script>
+    <script src="general.js"></script>
+
+</body>
+</html>
+
+
+

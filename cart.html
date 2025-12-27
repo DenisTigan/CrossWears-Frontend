@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coș de Cumpărături - CrossWears</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+</head>
+<body>
+
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+<nav class="navbar">
+    <div class="nav-left">
+        <a href="index.html" class="nav-logo">
+            <img src="image/logo.png" alt="Logo">
+        </a>
+
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="shop.html" class="active">Shop</a></li>
+            <li><a href="contact.html">Contact</a></li>
+        </ul>
+    </div>
+
+    <div class="nav-right">
+      <div class="cart-wrapper">
+        <a href="cart.html" class="nav-icon" id="cart-nav-link">
+            <i data-lucide="shopping-cart"></i>
+            <span id="cart-count-badge">0</span>
+        </a>
+
+        <div id="mini-cart-popup" class="mini-cart-popup">
+            <div class="mini-cart-header">Rezumat Coș</div>
+            <div id="mini-cart-items" class="mini-cart-body">
+                </div>
+            <div class="mini-cart-footer">
+                <div class="mini-cart-total">Total: <span id="mini-cart-total-price">0</span> RON</div>
+                <a href="cart.html" class="btn-view-cart">Vezi detalii</a>
+            </div>
+        </div>
+    </div>
+
+        <a href="login.html" id="nav-login-btn" class="login-btn">
+            Log In
+        </a>
+
+        <div class="profile-dropdown" id="nav-profile-section" style="display: none;">
+            <a href="#" class="nav-icon">
+                <i data-lucide="user"></i>
+            </a>
+
+            <div class="dropdown-content">
+                <a href="profile.html"><i data-lucide="user-check" style="width:16px;"></i> Contul meu</a>
+                <a href="orders.html"><i data-lucide="package" style="width:16px;"></i> Comenzile mele</a>
+                <a href="favorites.html"><i data-lucide="heart" style="width:16px;"></i> Favorite</a>
+                
+                <a href="admin-dashboard.html" id="admin-link" style="color: #e74c3c; font-weight: 600; display: none;">
+                    <i data-lucide="shield-alert" style="width:16px;"></i> Admin Panel
+                </a>
+                
+                <hr style="border: 0; border-top: 1px solid #eee; margin: 5px 0;">
+                
+                <a href="javascript:void(0)" id="logout-btn" style="color: #666;">Deconectare</a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+    <main id="cart-page-scope">
+    <div class="cart-main-container">
+        <h1>Coșul tău de cumpărături</h1>
+        
+        <div id="cart-container">
+            
+            <div class="table-scroll-wrapper">
+                <table class="cart-table-unique">
+                    <thead>
+                        <tr>
+                            <th>Produs</th>
+                            <th>Preț Unitar</th>
+                            <th>Cantitate</th>
+                            <th>Subtotal</th>
+                            <th>Acțiuni</th>
+                        </tr>
+                    </thead>
+                    <tbody id="cart-items-body">
+                        </tbody>
+                </table>
+            </div> 
+            <div class="cart-footer-summary">
+                <div class="total-box">
+                    <span class="total-amount-label">Total de plată:</span>
+                    <span class="total-amount-value"><span id="cart-total-price">0</span> RON</span>
+                </div>
+                <button class="btn-go-checkout" onclick="proceedToCheckout()">Finalizează Comanda</button>
+            </div>
+        </div>
+
+        <div id="empty-cart-msg" style="display:none;">
+            <p>Momentan nu ai adăugat niciun produs în coș.</p>
+            <a href="shop.html" class="btn-back-shop">Înapoi la Magazin</a>
+        </div>
+        
+        <div id="guest-msg" style="display:none; text-align: center; padding: 50px 0;">
+            <p>Trebuie să fii autentificat pentru a vedea coșul.</p>
+            <a href="login.html" class="btn-login-redirect" style="background: #3498db; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Autentificare</a>
+        </div>
+    </div>
+</main>
+<footer>
+  <div class="container">
+
+    <div class="sec about">
+      <h2>CrossWears</h2>
+      <p>
+      Suntem dedicați răspândirii Evangheliei prin artă vestimentară. 
+      Fiecare tricou este o mărturie și o invitație la dialog. 
+      Purtăm Credința cu Mândrie.
+      </p>
+    </div>
+
+       <div class="sec office">
+      <h2>Office</h2>
+      <p>Strd. Mihai Eminescu, Nr.10, <br>Sector 7,<br>București,<br>Romania,</p>
+      <p>contact.crosswears@gmail.com</p>
+      <p>+40 723 456 789</p>
+    </div>
+
+    <div class="sec links">
+      <h2>Links</h2>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="shop.html">Shop</a></li>
+        <li><a href="contact.html">Contacts</a></li>
+      </ul>
+    </div>
+
+     <div class="sec newsletter">
+    <h2>Newsletter</h2>
+    <div class="newsletter-box">
+        <input type="email" id="footer-email" placeholder="Enter your email">
+        <button onclick="subscribeNewsletter()">&#10140;</button>
+    </div>
+       <div class="social">
+        <a href="https://www.linkedin.com/in/denis-%C8%9Bigan-379a5436a/" target="_blank"><i class="fab fa-facebook"></i></a>
+        <a href="https://www.linkedin.com/in/denis-%C8%9Bigan-379a5436a/" target="_blank"><i class="fab fa-instagram"></i></a>
+        <a href="https://www.linkedin.com/in/denis-%C8%9Bigan-379a5436a/" target="_blank"><i class="fab fa-twitter"></i></a>
+      </div>
+    </div>
+  </div>
+
+  <p class="copyright">© 2025 CrossWears. Toate drepturile rezervate.</p>
+</footer>
+
+<script>
+    lucide.createIcons();
+</script>
+
+    <script src="general.js"></script>
+    <script src="cart.js"></script>
+</body>
+</html>

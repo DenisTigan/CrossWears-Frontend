@@ -1,0 +1,3280 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@500&display=swap');
+
+*{
+    margin:0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+
+  html {
+    height: 100%;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+  }
+    body {
+      height: 100%; 
+      margin: 0;
+      display: flex;
+      flex-direction: column;    
+    }
+      main { /*modificare pt footer la cart */
+        flex: 1; /* ia tot spațiul liber și împinge footer-ul jos */
+        display: block;
+      }
+
+/* pagina de home  */
+  .banner {
+  width: 100%;
+  height: 600px;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  text-align: center;
+}
+
+.banner-slider {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.banner-slider .slide {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  opacity: 0;
+  transition: opacity 1s ease-in-out;
+}
+
+.banner-slider .slide.active {
+  opacity: 1;
+}
+
+.banner::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.4);
+  z-index: 1;
+}
+
+.banner-content {
+  position: relative;
+  z-index: 2;
+}
+
+.banner-content h1 {
+  font-size: 3rem;
+  margin-bottom: 20px;
+}
+
+.banner-content button {
+  background: #FFD60A;
+  border: none;
+  padding: 12px 25px;
+  font-size: 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.banner-content button:hover {
+  background: #e5c509;
+}
+
+
+    /* Produse */
+    .products {
+      padding: 60px 40px;
+      background: #f5f5f5;
+    }
+    .products h2 {
+      text-align: center;
+      margin-bottom: 40px;
+      font-size: 2rem;
+      color: #0077B6;
+    }
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 30px;
+    }
+    .product-card {
+      perspective: 1000px;
+    }
+    .product-inner {
+      position: relative;
+      width: 100%;
+      padding-top: 150%; /* raport pt imagini */
+      transform-style: preserve-3d;
+      transition: transform 0.8s;
+    }
+    .product-card:hover .product-inner {
+      transform: rotateY(180deg);
+    }
+    .product-front, .product-back {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    .product-front img, .product-back img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .product-back {
+      transform: rotateY(180deg);
+    }
+/* =========================================
+   STILIZARE BARĂ DE FILTRE ȘI CĂUTARE
+   ========================================= */
+
+/* Containerul principal al filtrelor */
+.filter-section {
+    display: flex;
+    justify-content: space-between; /* Separă căutarea de filtrele de preț */
+    align-items: center;
+    gap: 20px; /* Spațiu între elemente pe ecrane mai mici */
+    padding: 20px 30px;
+    background: #ffffff;
+    margin: 30px auto; /* Centrat și cu spațiu sus/jos */
+    border-radius: 12px; /* Colțuri rotunjite modern */
+    max-width: 1100px; /* Lățime maximă pentru a nu se întinde prea mult */
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08); /* Umbră fină pentru efect de "plutire" */
+    flex-wrap: wrap; /* Permite elementelor să treacă pe rândul următor pe mobil */
+}
+
+/* Containerul pentru bara de căutare */
+.search-container {
+    position: relative; /* Necesar pentru poziționarea absolută a iconiței */
+    flex: 1; /* Ocupă tot spațiul disponibil */
+    min-width: 300px; /* Lățime minimă pentru a nu deveni prea mic */
+}
+
+/* Câmpul de input pentru căutare */
+#search-input {
+    width: 100%;
+    padding: 14px 20px 14px 50px; /* Padding stânga mai mare pentru iconiță */
+    border: 1px solid #e0e0e0;
+    border-radius: 30px; /* Formă ovală modernă */
+    font-size: 15px;
+    color: #333;
+    background-color: #f9f9f9;
+    transition: all 0.3s ease;
+}
+
+#search-input:focus {
+    border-color: #00a6ff; /* Culoare de accent la focus (albastrul tău) */
+    background-color: #fff;
+    box-shadow: 0 0 0 3px rgba(0, 166, 255, 0.1);
+    outline: none;
+}
+
+/* Iconița de căutare */
+.search-container .fa-search {
+    position: absolute;
+    left: 20px;
+    top: 50%;
+    transform: translateY(-50%); /* Centrare verticală perfectă */
+    color: #888;
+    font-size: 18px;
+    pointer-events: none; /* Iconița nu blochează click-ul în input */
+}
+
+/* Secțiunea filtrelor de preț */
+.price-filters {
+    display: flex;
+    align-items: center;
+    gap: 12px; /* Spațiu între input-uri și buton */
+}
+
+/* Input-urile pentru preț */
+.price-filters input[type="number"] {
+    width: 130px;
+    padding: 12px 15px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 14px;
+    text-align: center;
+    background-color: #f9f9f9;
+    transition: border-color 0.3s ease;
+}
+
+.price-filters input[type="number"]:focus {
+    border-color: #00a6ff;
+    background-color: #fff;
+    outline: none;
+}
+
+/* Ascunde săgețile standard din input-urile de tip număr */
+.price-filters input[type="number"]::-webkit-inner-spin-button,
+.price-filters input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Butonul de filtrare */
+#btn-filter {
+    padding: 12px 25px;
+    background-color: #00a6ff; /* Culoarea principală a site-ului */
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px; /* Spațiu dacă vrei să adaugi o iconiță și în buton */
+}
+
+#btn-filter:hover {
+    background-color: #008ecc; /* O nuanță puțin mai închisă la hover */
+    transform: translateY(-2px); /* Efect subtil de ridicare */
+}
+
+#btn-filter:active {
+    transform: translateY(0); /* Revine la loc la click */
+}
+
+/* Adaptare pentru ecrane mici (Mobil) */
+@media (max-width: 768px) {
+    .filter-section {
+        flex-direction: column; /* Elementele unul sub altul */
+        align-items: stretch; /* Se întind pe toată lățimea */
+        padding: 20px;
+    }
+
+    .search-container {
+        min-width: auto; /* Resetăm lățimea minimă */
+    }
+
+    .price-filters {
+        flex-direction: column; /* Input-urile de preț unul sub altul */
+        width: 100%;
+    }
+
+    .price-filters input[type="number"],
+    #btn-filter {
+        width: 100%; /* Butoanele și input-urile ocupă toată lățimea */
+    }
+}
+
+
+/* NAVBAR GENERAL */
+.navbar {
+    width: 100%;
+    padding: 0px 40px;
+    background: linear-gradient(90deg, #cdd7fc, #00a6ff);    
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0px 2px 12px rgba(0,0,0,0.08);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+/* LOGO */
+.nav-logo img {
+    height: 80px;
+    object-fit: contain;
+}
+
+/* LEFT SIDE */
+.nav-left {
+    display: flex;
+    align-items: center;
+    gap: 40px;
+}
+
+/* LINKS */
+.nav-links {
+    display: flex;
+    gap: 30px;
+    list-style: none;
+}
+
+.nav-links a {
+    text-decoration: none;
+    font-size: 18px;
+    color: #222;
+    font-weight: 500;
+    transition: 0.2s;
+}
+
+.nav-links a:hover {
+    color: #ffd700; /* asortezi cu footerul */
+}
+
+/* RIGHT SIDE ICONS */
+.nav-right {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+}
+
+.nav-icon {
+    color: #000000;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.nav-icon:hover {
+    color: #ffd700;
+}
+
+.nav-icon svg {
+    width: 26px;
+    height: 26px;
+}
+
+.nav-links a.active {
+    color: #ffd700;       /* Aceeași culoare ca la hover */
+    font-weight: 700;     /* Text mai gros */
+    position: relative;
+}
+
+/* Linia de sub text */
+.nav-links a.active::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 2px;
+    bottom: -5px;         /* Distanța față de text */
+    left: 0;
+    background-color: #ffd700;
+    border-radius: 2px;
+}
+/* Stil pentru butonul de login din navbar */
+.login-btn {
+    text-decoration: none;
+    color: #333; /* Sau culoarea textului tău */
+    font-weight: 600;
+    padding: 8px 20px;
+    border: 2px solid #333;
+    border-radius: 20px;
+    transition: all 0.3s ease;
+    margin-left: 10px;
+}
+
+.login-btn:hover {
+    background-color: #333;
+    color: #fff;
+}
+
+/* Asigură-te că linkul de Admin se aliniază frumos cu iconița */
+#admin-link {
+    display: flex; /* Flexbox pentru aliniere icon + text */
+    align-items: center;
+    gap: 8px;
+}
+
+/* --- PROFILE DROPDOWN --- */
+
+/* 1. Containerul care ține iconița și meniul */
+.profile-dropdown {
+    position: relative; /* Punct de referință pentru meniul absolut */
+    display: inline-block;
+    height: 100%; /* Să aibă înălțimea navbar-ului */
+    display: flex;
+    align-items: center;
+}
+
+/* 2. Meniul Ascuns (Pop-up) */
+.dropdown-content {
+    display: none; /* Ascuns implicit */
+    position: absolute;
+    top: 100%; /* Imediat sub navbar */
+    right: 0;  /* Aliniat la dreapta iconiței */
+    background-color: #ffffff;
+    min-width: 200px; /* Lățimea meniului */
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2); /* Umbra frumoasă */
+    border-radius: 8px;
+    z-index: 1001; /* Peste orice altceva */
+    padding: 10px 0;
+    border: 1px solid #eee;
+    
+    /* Truc: Spațiu invizibil ca să nu se închidă meniul când muți mouse-ul */
+    margin-top: 15px; 
+}
+
+/* Săgeată mică sus (Opțional - estetic) */
+.dropdown-content::before {
+    content: "";
+    position: absolute;
+    top: -6px;
+    right: 10px;
+    width: 12px;
+    height: 12px;
+    background: white;
+    transform: rotate(45deg);
+    border-top: 1px solid #eee;
+    border-left: 1px solid #eee;
+}
+
+/* 3. Afișare la Hover */
+.profile-dropdown:hover .dropdown-content {
+    display: block;
+}
+
+/* 4. Link-urile din meniu */
+.dropdown-content a {
+    color: #333;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: flex; /* Ca să aliniem iconița cu textul */
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+    transition: background 0.2s;
+}
+
+.dropdown-content a:hover {
+    background-color: #f1f1f1;
+    color: #00a6ff; /* Albastrul din tema ta */
+}
+.dropdown-content::after {
+    content: "";
+    position: absolute;
+    top: -15px; /* Se ridică în sus exact cât e marginea de mare */
+    left: 0;
+    width: 100%;
+    height: 15px; /* Umple gaura */
+    background: transparent; /* E invizibil */
+    /* background: red;  <-- Decomentează asta dacă vrei să vezi "podul" la debug */
+}
+
+
+
+
+
+
+
+/* RESPONSIVE */
+@media(max-width: 850px) {
+    .nav-links {
+        display: none; /* pentru simplitate */
+    }
+}
+
+
+
+
+
+
+
+footer {
+  /* 🔥 Aici schimbi gradientul principal */
+  /* background: linear-gradient(90deg, #1d2671, #c33764); */
+  background: linear-gradient(90deg, #cdd7fc, #00a6ff);    
+  padding: 60px 0;
+  color: #000000;
+  font-family: "Poppins", sans-serif;
+}
+
+.container {
+  width: 85%;
+  margin: auto;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+footer h2 {
+  font-size: 22px;
+  margin-bottom: 20px;
+  position: relative;
+}
+
+footer h2::after {
+  /* 🔥 Linia decorativă de sub titluri */
+  content: "";
+  width: 40px;
+  height: 3px;
+  background: #ffcc00; /* Schimbă aici culoarea liniei */
+  position: absolute;
+  left: 0;
+  bottom: -8px;
+}
+
+.sec {
+  width: 22%;
+  min-width: 250px;
+  margin-bottom: 30px;
+}
+
+.sec.about p {
+  line-height: 1.6;
+}
+
+.sec.links ul {
+  list-style: none;
+  padding: 0;
+}
+
+.sec.links li a {
+  /* 🔥 Culoarea linkurilor */
+  color: #000000;
+  text-decoration: none;
+  display: block;
+  margin: 8px 0;
+  transition: 0.3s;
+}
+
+.sec.links li a:hover {
+  color: #ffd700; /* Hover link color */
+}
+
+/* ⭐ Newsletter box */
+.newsletter-box {
+  display: flex;
+  border-bottom: 1px solid #000000;
+  margin-bottom: 20px;
+}
+
+.newsletter-box input {
+  width: 100%;
+  background: transparent;
+  border: none;
+  outline: none;
+  padding: 10px;
+  color: #000000;
+}
+
+.newsletter-box button {
+  background: none;
+  border: none;
+  color: #000000;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+/* ⭐ Social icons */
+.social a {
+  display: inline-flex;
+  width: 40px;
+  height: 40px;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  
+  /* 🔥 Culoarea fundalului iconițelor */
+  background: rgba(255, 255, 255, 0.2); 
+  color: rgb(0, 0, 0);
+  text-decoration: none;
+  margin-right: 10px;
+  transition: 0.3s;
+}
+
+.social a:hover {
+  /* 🔥 Hover la iconițe (schimbă cum vrei) */
+  background: #ffd700;
+  color: #000;
+}
+
+/* ⭐ Footer bottom */
+footer .copyright {
+  text-align: center;
+  padding: 20px 0 0 0;
+  font-size: 14px;
+  opacity: 0.8;
+}
+
+/* Responsive */
+@media(max-width: 900px) {
+  .container {
+    flex-direction: column;
+  }
+  .sec {
+    width: 100%;
+  }
+}
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* obligă conținutul să împingă footerul jos */
+}
+
+main {
+  flex: 1; /* împinge footerul în partea de jos */
+}
+
+
+      /* SHOP */
+/* /* === PRODUCT CARD === */
+/* Container general pentru toate produsele */
+#product-container {
+    display: grid;
+    grid-template-columns: repeat(4, 250px);
+    gap: 30px;
+    justify-content: center;
+    margin: 40px auto;
+}
+main h1 {
+    text-align: center;
+    margin-top: 40px; /* Poți ajusta spațiul de sus */
+}
+
+
+/* Card-ul fiecărui produs */
+.product-card {
+    background: #ffffff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    transition: 0.2s ease-in-out;
+}
+
+/* Hover efect */
+.product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+}
+
+/* Elimină culoarea albastră pe link */
+.product-link {
+    display: block; /* Îl facem bloc ca să ia toată mărimea */
+    width: 100%;
+    height: 100%;
+}
+
+/* Container imagine */
+.product-img-container {
+   position: relative; /* Esențial pt inimioară */
+    width: 100%;
+    height: 300px; /* SAU înălțimea pe care o vrei tu fixă */
+    overflow: hidden; /* Ascunde ce iese din chenar */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f9f9f9; /* Un fundal gri deschis dacă poza e png transparent */
+}
+
+/* Imagine produs */
+.product-img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain; /* <--- ASTA REZOLVĂ TĂIEREA */
+    /* object-fit: contain -> Arată toată poza fără să o taie */
+    /* object-fit: cover -> Umple tot spațiul dar taie marginile */
+}
+/* Zona de text */
+.product-content {
+    padding: 15px;
+}
+
+.product-title {
+    font-size: 20px;
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+.product-description {
+    color: #555;
+    margin-bottom: 10px;
+    font-size: 14px;
+}
+
+.product-price {
+    font-size: 18px;
+    font-weight: bold;
+    color: #e63946;
+}
+
+/* zona cu buton */
+.product-actions {
+    padding: 15px;
+    text-align: center;
+}
+
+/* buton disponibil */
+.btn-add-cart {
+    padding: 10px 18px;
+    font-size: 15px;
+    background: #2a9d8f;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.btn-add-cart:hover {
+    background: #21867a;
+}
+
+/* buton stoc epuizat */
+.btn-out-of-stock {
+    padding: 10px 18px;
+    font-size: 15px;
+    background: #ccc;
+    color: #666;
+    border: none;
+    border-radius: 8px;
+    cursor: not-allowed;
+}
+
+/* 2. Stilizarea cardului 'Adaugă Produs Nou' */
+.add-product-card {
+    /* Setări de bază pentru a arăta ca un card în grilă */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    color: #2a9d8f; /* Culoarea primară */
+    background: #e9f5f5; /* Fundal foarte deschis */
+    border: 2px dashed #2a9d8f; /* Linie punctată pentru a sugera "adăugare" */
+    border-radius: 12px;
+    
+    /* Asigurăm că are aceeași dimensiune cu celelalte carduri pentru aliniere */
+    width: 250px; 
+    height: 400px; /* Aproximativ înălțimea unui card de produs */
+    cursor: pointer;
+    transition: 0.3s ease-in-out;
+}
+
+.add-product-card:hover {
+    background: #d4edee;
+    border-color: #21867a;
+    transform: translateY(-5px);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+}
+
+/* Stilul iconiței de plus (rotundă) */
+.add-product-card i {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 30px;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%; /* Face butonul rotund */
+    background: #2a9d8f;
+    color: white;
+    margin-bottom: 10px;
+    transition: 0.2s;
+}
+
+.add-product-card:hover i {
+    background: #21867a;
+}
+
+.add-product-card p {
+    font-weight: 600;
+    font-size: 16px;
+    color: #2a9d8f;
+}
+
+
+/* buton de favorite */
+/* Stil pentru containerul imaginii (ca să poziționăm inima absolut) */
+
+
+/* Stilul inimii */
+.heart-icon {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 1.5rem;
+    color: white; /* Inima goală */
+    background-color: rgba(0, 0, 0, 0.3); /* Fundal semi-transparent */
+    padding: 8px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 10; 
+}
+
+.heart-icon:hover {
+    transform: scale(1.1);
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+/* Când e activă (produs favorit) */
+.heart-icon.active {
+    color: #e74c3c; /* Roșu */
+    background-color: white;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+/* pagina produs */
+/* ========= PAGINA INDIVIDUALĂ PRODUS ========= */
+.singleprod-wrapper {
+    display: flex;
+    gap: 40px;
+    padding: 40px;
+    max-width: 1100px;
+    margin: auto;
+}
+
+.singleprod-left {
+    width: 50%;
+}
+
+.singleprod-img {
+    width: 100%;
+    height: auto;
+    max-height: 600px;
+    object-fit: contain;
+    border-radius: 10px;
+    background: #f5f5f5;
+}
+
+.singleprod-right {
+    width: 50%;
+}
+
+.singleprod-title {
+    font-size: 32px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.singleprod-desc {
+    font-size: 16px;
+    color: #444;
+    margin-bottom: 15px;
+}
+
+.singleprod-price {
+    font-size: 28px;
+    color: #e63946;
+    margin-bottom: 20px;
+}
+
+.singleprod-stock {
+    font-size: 18px;
+    margin-bottom: 20px;
+}
+
+.singleprod-action {
+    display: flex;
+    flex-direction: column; /* face ca butoanele sa fie unul sub altul */
+    gap: 12px;              /* spatiu între ele */
+    max-width: 220px;       /* la fel ca butoanele */
+}
+
+
+.singleprod-btn-add {
+    background: #2a9d8f;
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    font-size: 18px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.singleprod-btn-add:hover {
+    background: #21867a;
+}
+
+.singleprod-btn-out {
+    background: #bcbcbc;
+    color: #666;
+    border: none;
+    padding: 12px 25px;
+    font-size: 18px;
+    border-radius: 8px;
+}
+
+
+/* Add to cart mic */
+.btn-add-cart-big {
+    padding: 8px 14px;         /* mai mic */
+    font-size: 14px;           /* mai mic */
+    background: #2a9d8f;
+    color: white;
+    border: none;
+    border-radius: 8px;        /* mai compact */
+    cursor: pointer;
+    transition: 0.2s;
+    width: 100%;               /* egale */
+}
+
+.btn-add-cart-big:hover {
+    background: #21867a;
+}
+
+/* Stoc epuizat mic */
+.btn-out-big {
+    padding: 8px 14px;
+    font-size: 14px;
+    background: #ccc;
+    color: #666;
+    border: none;
+    border-radius: 8px;
+    width: 100%;
+}
+
+/* Containerul cu butoane */
+
+
+/* Buton UPDATE */
+/* --- ZONA ADMIN PE PAGINA DE PRODUS --- */
+
+.admin-actions-container {
+    margin-top: 25px;
+    padding-top: 20px;
+    border-top: 1px solid #eee; /* O linie fină de separare */
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* Spațiu între butoane */
+}
+
+.admin-label {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #e74c3c; /* Roșu discret */
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 5px;
+}
+
+/* Stil comun pentru butoanele de admin */
+.btn-update-product,
+.btn-delete-product {
+    display: block;
+    width: 100%; /* Le facem cât toată lățimea (ca cel de Coș) */
+    padding: 12px 0;
+    text-align: center;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 8px; /* Colțuri rotunjite */
+    border: none;
+    cursor: pointer;
+    text-decoration: none; /* Pt link-ul <a> */
+    transition: transform 0.2s, box-shadow 0.2s;
+    color: white;
+}
+
+/* Butonul UPDATE (Verde frumos) */
+.btn-update-product {
+    background-color: #2ecc71; 
+    box-shadow: 0 4px 10px rgba(46, 204, 113, 0.3);
+}
+
+.btn-update-product:hover {
+    background-color: #27ae60;
+    transform: translateY(-2px);
+}
+
+/* Butonul DELETE (Roșu frumos) */
+.btn-delete-product {
+    background-color: #e74c3c;
+    box-shadow: 0 4px 10px rgba(231, 76, 60, 0.3);
+}
+
+.btn-delete-product:hover {
+    background-color: #c0392b;
+    transform: translateY(-2px);
+}
+.popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    display: none;
+    justify-content: center;
+    align-items: center;
+}
+
+.popup-box {
+    background: white;
+    padding: 25px;
+    border-radius: 10px;
+    width: 300px;
+    text-align: center;
+}
+
+.popup-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.popup-btn {
+    padding: 8px 16px;
+    border: none;
+    cursor: pointer;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+.popup-btn.confirm {
+    background: #e63946;
+    color: white;
+}
+
+.popup-btn.cancel {
+    background: #999;
+    color: white;
+}
+
+
+
+
+/* --- SECȚIUNEA SUGESTII --- */
+
+/* 1. Titlul secțiunii - Centrat și stilizat */
+#suggestions-section h3 {
+    text-align: center;      /* Centrează textul */
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #333;
+    
+    /* AICI ESTE LINIA TA */
+    border-bottom: 2px solid #eee; /* O singură linie sub text */
+    
+    /* Spațiere */
+    padding-bottom: 15px; /* Spațiu între scris și linie */
+    margin-bottom: 30px;  /* Spațiu între linie și produsele de jos */
+}
+#suggestions-section h3 span {
+    background: #fff; /* Ascunde linia din spatele textului */
+    padding: 0 20px;  /* Spațiu în jurul textului */
+}
+/* 2. Grid-ul - Așezare în pagină */
+.suggestions-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* 4 pe rând */
+    gap: 20px;
+    max-width: 1200px;
+    margin: 0 auto; /* Centrează tot gridul în pagină */
+}
+#suggestions-section {
+  margin-top: 60px;
+    margin-bottom: 100px; /* Spațiu față de footer */
+    border: none !important; /* !important asigură că dispare orice linie veche */
+    padding-top: 0;
+
+}
+
+/* 3. Cardul de sugestie - Wrapper-ul */
+.suggestion-card {
+    background: #fff;
+    border: 1px solid #eee;  /* Bordură fină ca în codul tău */
+    border-radius: 12px;     /* Colțuri rotunjite */
+    overflow: hidden;
+    text-decoration: none;   /* Fără linie sub link */
+    color: inherit;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Efect la hover - se ridică puțin */
+.suggestion-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+
+/* 4. Imaginea - EXACT stilul din codul tău */
+.suggestion-img-wrapper {
+    width: 100%;
+    height: 200px; /* Înălțime fixă ca la produsele tale */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #ffffff;
+    border-bottom: 1px solid #f0f0f0;
+    padding: 10px; /* Padding mic ca să nu atingă marginile */
+}
+
+.suggestion-img-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain; /* Cheia succesului: se vede tot tricoul */
+    object-position: center;
+}
+
+/* 5. Zona de Text - Fonturi și culori preluate de la tine */
+.suggestion-info {
+    padding: 15px; /* Același padding ca .product-content */
+    text-align: left; /* Textul din card aliniat stânga (arată mai bine) */
+}
+
+.suggestion-info h4 {
+    font-size: 18px; /* Puțin mai mic decât titlul principal (care e 20px) */
+    font-weight: 600;
+    margin: 0 0 8px;
+    color: #000;
+}
+
+.suggestion-info p {
+    font-size: 18px; /* Același font ca .product-price */
+    font-weight: bold;
+    color: #e63946;  /* Aceeași culoare roșie */
+    margin: 0;
+}
+
+/* RESPONSIVE */
+@media (max-width: 992px) {
+    .suggestions-grid {
+        grid-template-columns: repeat(2, 1fr); /* 2 pe rând pe tabletă */
+    }
+}
+
+@media (max-width: 576px) {
+    .suggestions-grid {
+        grid-template-columns: 1fr; /* 1 pe rând pe mobil */
+    }
+}
+
+
+
+/* =========================================
+   SECȚIUNEA RECENZII
+   ========================================= */
+
+/* 1. Titlul Secțiunii */
+.reviews-section h3 {
+    color: #333;
+    font-family: inherit;
+    /* Celelalte stiluri (centrare, font-size) sunt deja inline în HTML, 
+       dar le poți muta aici dacă vrei curățenie */
+}
+
+/* 2. Containerul Formularului (Cutia gri) */
+.review-form-container {
+    background-color: #f9f9f9;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    padding: 25px;
+    margin-bottom: 40px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+}
+
+.review-form-container h4 {
+    margin-top: 0;
+    margin-bottom: 20px;
+    color: #555;
+    font-size: 1.1rem;
+}
+
+/* 3. Câmpurile de text (Input și Textarea) */
+#reviewForm input[type="text"],
+#reviewForm textarea {
+    width: 100%;
+    padding: 12px 15px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-family: inherit;
+    transition: border-color 0.3s;
+    background: #fff;
+    box-sizing: border-box; /* Asigură că padding-ul nu lățește inputul peste container */
+}
+
+#reviewForm input[type="text"]:focus,
+#reviewForm textarea:focus {
+    outline: none;
+    border-color: #333; /* Se închide la culoare când scrii */
+}
+
+#reviewForm textarea {
+    height: 100px;
+    resize: vertical; /* Permite userului să tragă doar în jos de colț */
+}
+
+/* 4. Stelele Interactive (Formular) */
+.star-rating {
+    display: flex;
+    gap: 5px;
+    margin-bottom: 20px;
+    font-size: 28px; /* Mărimea stelelor */
+    cursor: pointer;
+}
+
+.star-rating .star {
+    color: #ccc; /* Culoarea gri implicită */
+    transition: color 0.2s ease, transform 0.1s;
+}
+
+.star-rating .star:hover {
+    transform: scale(1.1); /* Mărește puțin steaua la mouseover */
+}
+
+/* 5. Butonul de trimitere */
+.btn-submit-review {
+    background-color: #333; /* Negru/Gri închis */
+    color: #fff;
+    border: none;
+    padding: 12px 25px;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.1s;
+}
+
+.btn-submit-review:hover {
+    background-color: #555; /* Mai deschis la hover */
+    transform: translateY(-2px);
+}
+
+/* 6. Lista de Recenzii (Cardurile de jos) */
+/* 6. Lista de Recenzii (Cardurile de jos) - STIL NOU */
+.review-card {
+    background: #ffffff; /* Fundal alb */
+    border: 1px solid #eee; /* Contur foarte fin */
+    border-radius: 25px; /* <--- Asta le face OVALE / ROTUNJITE */
+    padding: 25px;       /* Spațiu interior ca să nu fie textul lipit */
+    margin-bottom: 20px; /* Spațiu între recenzii */
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05); /* O umbră fină pentru efect 3D */
+    transition: transform 0.2s;
+}
+
+.review-card:hover {
+    transform: translateY(-3px); /* Se ridică puțin la mouseover */
+    box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+}
+
+/* Header-ul recenziei (Nume + Stele) */
+.review-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    border-bottom: 1px solid #f0f0f0; /* Linie separatoare fină în interior */
+    padding-bottom: 10px;
+}
+
+.review-author {
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: #333;
+    margin-right: 10px;
+}
+
+.review-date {
+    display: block;
+    margin-top: 15px;
+    font-size: 0.85rem;
+    color: #999;
+    text-align: right;
+}
+
+.review-stars {
+    color: #FFD700; /* Auriu pentru stelele afișate */
+    font-size: 1.1rem;
+    letter-spacing: 2px;
+}
+
+
+/* --- STILURI PENTRU ACȚIUNI RECENZII --- */
+
+/* Butoanele de acțiune (Edit/Delete) */
+.review-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.btn-icon {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+    padding: 5px;
+    transition: color 0.2s;
+}
+
+.btn-icon.edit { color: #3498db; } /* Albastru */
+.btn-icon.edit:hover { color: #2980b9; }
+
+.btn-icon.delete { color: #e74c3c; } /* Roșu */
+.btn-icon.delete:hover { color: #c0392b; }
+
+/* Zona de editare inline */
+.inline-edit-box textarea {
+    width: 100%;
+    height: 80px;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-top: 10px;
+    font-family: inherit;
+    resize: vertical;
+}
+
+.edit-buttons {
+    margin-top: 5px;
+    display: flex;
+    gap: 10px;
+}
+
+.btn-small {
+    padding: 5px 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+.btn-small.save {
+    background-color: #27ae60;
+    color: white;
+}
+
+.btn-small.cancel {
+    background-color: #95a5a6;
+    color: white;
+}
+
+
+/* =========================
+   ADD PRODUCT FORM (prefix ap-)
+   ========================= */
+
+/* ======================================= */
+/* PAGINA ADD PRODUCT (Setări UNICE) */
+/* ======================================= */
+
+/* Container (Copia lui .upd-container) */
+/* ======================================= */
+/* PAGINA ADD PRODUCT (Setări UNICE) */
+/* ======================================= */
+
+/* Container (Copia lui .upd-container) */
+.add-container {
+    max-width: 600px;
+    margin: 40px auto;
+    padding: 25px;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    font-family: Arial, sans-serif;
+}
+
+.add-container h2 {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+/* Formularul (Copia lui #update-form) */
+#addProductForm {
+    /* Asigură-te că există un spațiu suficient între grupuri, uniform cu #update-form */
+    display: flex;
+    flex-direction: column;
+    gap: 15px; /* Adaugă spațiu între elemente, crucial pentru aspect */
+}
+
+/* Input-uri, Select, Textarea (Copia stilului de la #update-form elemente) */
+/* Aplicăm pe elementele din #addProductForm */
+#addProductForm input,
+#addProductForm select,
+#addProductForm textarea {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 15px;
+    width: 100%; /* Asigură că toate câmpurile ocupă lățimea maximă */
+    box-sizing: border-box; /* Include padding și border în lățime */
+}
+
+#addProductForm textarea {
+    height: 100px;
+    resize: vertical;
+}
+
+/* Stilul Butonului de Adăugare (Copia lui .btn-save) */
+.btn-add {
+    background: #2a9d8f;
+    color: white;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.2s;
+    font-size: 16px;
+    margin-top: 10px; /* Asigură un spațiu deasupra butonului */
+}
+
+.btn-add:hover {
+    background: #21867a; 
+}
+
+
+/* PAGINA UPDATE */
+
+/* CSS UNIC — NU afectează alte pagini */
+
+.upd-container {
+    max-width: 600px;
+    margin: 40px auto;
+    padding: 25px;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    font-family: Arial, sans-serif;
+}
+
+.upd-container h2 {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+#update-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+#update-form input,
+#update-form select,
+#update-form textarea {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 15px;
+}
+
+textarea {
+    height: 100px;
+    resize: vertical;
+}
+
+.btn-save {
+    background: #2a9d8f;
+    color: white;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.2s;
+    font-size: 16px;
+}
+
+.btn-save:hover {
+    background: #21867a;
+}
+
+
+
+
+   /* CONȚINUT CONTACT */
+    #cnt {
+      flex: 1;
+      padding: 60px 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+    .contact-container {
+      background: #fff;
+      max-width: 1100px;
+      width: 100%;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    .contact-info {
+      background: linear-gradient(135deg, #0077B6, #0096C7);
+      color: #fff;
+      padding: 40px;
+    }
+    .contact-info h2 {
+      margin-bottom: 20px;
+    }
+    .contact-info p {
+      margin: 10px 0;
+    }
+    .contact-info i {
+      margin-right: 10px;
+      color: #FFD60A;
+    }
+    .map iframe {
+      width: 100%;
+      height: 200px;
+      border: none;
+      border-radius: 8px;
+      margin-top: 20px;
+    }
+
+    .contact-form {
+      padding: 40px;
+    }
+    .contact-form h2 {
+      margin-bottom: 20px;
+    }
+    .contact-form form {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+    }
+    .contact-form form input,
+    .contact-form form textarea {
+      padding: 12px;
+      border: 2px solid #ddd;
+      border-radius: 8px;
+      font-size: 1rem;
+      transition: border 0.3s, box-shadow 0.3s;
+      width: 100%;
+    }
+    .contact-form form textarea {
+      grid-column: span 2;
+      resize: none;
+    }
+    .contact-form form input:focus,
+    .contact-form form textarea:focus {
+      border-color: #0077B6;
+      box-shadow: 0 0 8px rgba(0,119,182,0.4);
+      outline: none;
+    }
+    .contact-form button {
+      grid-column: span 2;
+      background: #0077B6;
+      color: #fff;
+      border: none;
+      padding: 12px;
+      font-size: 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background-color 0.3s;
+    }
+    .contact-form button:hover {
+      background: #005f87;
+    }
+
+
+
+
+
+
+
+ 
+
+    @media(max-width: 900px){
+      .contact-container { grid-template-columns: 1fr; }
+      .contact-form form { grid-template-columns: 1fr; }
+      .contact-form form textarea,
+      .contact-form button { grid-column: span 1; }
+      .map iframe { height: 300px; }
+    }
+
+
+
+
+
+    /* DASHBOARD ADMIN  */
+    /* Layout General */
+body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background-color: #f4f6f9;
+}
+
+.admin-wrapper {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* --- SIDEBAR --- */
+.admin-sidebar {
+    width: 260px;
+    background-color: #343a40; /* Dark Grey */
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    position: fixed; /* Rămâne pe loc */
+    height: 100%;
+}
+
+.sidebar-header {
+    padding: 20px;
+    background-color: #00a6ff; /* Brand color */
+    text-align: center;
+}
+
+.sidebar-menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    flex-grow: 1;
+}
+
+.sidebar-menu li {
+    padding: 15px 25px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    transition: 0.3s;
+    border-bottom: 1px solid #454d55;
+}
+
+.sidebar-menu li:hover, .sidebar-menu li.active {
+    background-color: #454d55;
+    border-left: 4px solid #00a6ff;
+}
+
+.sidebar-footer {
+    padding: 20px;
+}
+
+.back-home {
+    color: #bbb;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.back-home:hover { color: white; }
+
+/* --- MAIN CONTENT --- */
+.admin-content {
+    flex: 1;
+    margin-left: 260px; /* Facem loc la sidebar */
+    padding: 20px 40px;
+}
+
+.admin-topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #ddd;
+}
+
+.logout-btn {
+    background: #e74c3c;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+/* --- STATS CARDS (DASHBOARD) --- */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+}
+
+.stat-card {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    position: relative;
+    overflow: hidden;
+}
+
+.stat-number {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #333;
+    margin: 10px 0;
+}
+
+.stat-icon {
+    position: absolute;
+    right: 20px;
+    top: 30px;
+    color: #f1f1f1;
+    width: 60px;
+    height: 60px;
+    z-index: 0;
+}
+
+/* --- TABELE --- */
+.table-container {
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+}
+
+th {
+    background-color: #f8f9fa;
+    font-weight: 600;
+}
+
+.badge {
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: bold;
+}
+
+.badge.pending { background: #ffeeba; color: #856404; }
+.badge.completed { background: #d4edda; color: #155724; }
+
+/* --- INPUTS & FORMS --- */
+.newsletter-compose {
+    background: white;
+    padding: 30px;
+    border-radius: 8px;
+}
+
+.admin-input, .admin-textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.admin-textarea { height: 150px; }
+
+.btn-send-newsletter, .btn-add-new {
+    background: #00a6ff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.section-header-flex {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+/* =========================================
+   STILURI EXCLUSIVE PENTRU PAGINA FAVORITE
+   (Se aplică doar în #favorites-container)
+   ========================================= */
+
+/* 1. Grila specifică pentru Favorite */
+#favorites-container.grid {
+    display: grid;
+    /* Aceeași logică de grilă responsive */
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 30px;
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* 2. Cardul produsului (Doar în favorite) */
+#favorites-container .product-card {
+    background-color: #fff;
+    border: 1px solid #eee;
+    border-radius: 15px; /* Mai rotunjit aici dacă vrei */
+    overflow: hidden;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+}
+
+/* Efect la hover specific favorite */
+#favorites-container .product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 24px rgba(0,0,0,0.1);
+    border-color: #ffdada; /* O tentă roșiatică subtilă la hover */
+}
+
+/* 3. Containerul Imaginii */
+#favorites-container .product-img-container {
+    width: 100%;
+    height: 280px; /* Înălțime fixă */
+    position: relative;
+    background-color: #fff; /* Fundal alb curat */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-bottom: 1px solid #f9f9f9;
+}
+
+/* 4. Imaginea propriu-zisă */
+#favorites-container .product-img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain; /* NU TAIE POZA */
+    padding: 15px;
+}
+
+/* 5. Inimioara (care e deja roșie aici) */
+#favorites-container .heart-icon {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    font-size: 1.4rem;
+    color: #e74c3c; /* Roșu direct */
+    background: rgba(255, 255, 255, 0.9);
+    padding: 8px;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    transition: transform 0.2s;
+    z-index: 10;
+}
+
+#favorites-container .heart-icon:hover {
+    transform: scale(1.2); /* Se mărește când vrei să ștergi */
+}
+
+/* 6. Conținutul Textului */
+#favorites-container .product-content {
+    padding: 15px;
+    text-align: center;
+}
+
+#favorites-container .product-title {
+    font-size: 1.1rem;
+    color: #333;
+    margin-bottom: 5px;
+    white-space: nowrap; /* Textul pe un singur rând */
+    overflow: hidden;
+    text-overflow: ellipsis; /* ... dacă e prea lung */
+}
+
+#favorites-container .product-price {
+    color: #e74c3c;
+    font-weight: 700;
+    font-size: 1.1rem;
+}
+
+/* 7. Butoanele de jos */
+#favorites-container .product-actions {
+    padding: 0 15px 20px 15px;
+}
+
+#favorites-container .btn-add-cart {
+    width: 100%;
+    background-color: #333;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+#favorites-container .btn-add-cart:hover {
+    background-color: #555;
+}
+
+
+/* --- CHAT CLIENT STYLES --- */
+
+/* 1. Butonul Plutitor */
+#chat-toggle-btn {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 60px;
+    height: 60px;
+    background-color: #2ecc71; /* Verde proaspăt */
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 24px;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    z-index: 1000;
+    transition: transform 0.3s;
+}
+
+#chat-toggle-btn:hover {
+    transform: scale(1.1);
+    background-color: #27ae60;
+}
+
+/* 2. Fereastra de Chat */
+.chat-container {
+    position: fixed;
+    bottom: 100px;
+    right: 30px;
+    width: 350px;
+    height: 450px;
+    background-color: white;
+    border-radius: 15px;
+    box-shadow: 0 5px 25px rgba(0,0,0,0.15);
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border: 1px solid #eee;
+}
+
+/* 3. Header */
+.chat-header {
+    background-color: #333; /* Dark mode header */
+    color: white;
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: bold;
+}
+
+.close-chat-btn {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+/* 4. Zona Mesaje (Scrollable) */
+.chat-messages {
+    flex: 1; /* Ocupă tot spațiul rămas */
+    padding: 15px;
+    overflow-y: auto;
+    background-color: #f9f9f9;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.chat-placeholder {
+    color: #888;
+    text-align: center;
+    margin-top: 50%;
+    transform: translateY(-50%);
+    font-size: 0.9rem;
+}
+
+/* 5. Input Area */
+.chat-input-area {
+    padding: 10px;
+    border-top: 1px solid #eee;
+    display: flex;
+    background: white;
+}
+
+#chat-input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    outline: none;
+}
+
+.send-btn {
+    background: none;
+    border: none;
+    color: #2ecc71;
+    font-size: 1.2rem;
+    margin-left: 10px;
+    cursor: pointer;
+}
+
+/* 6. Bule de Mesaj (Stilurile bulelor) */
+.message-bubble {
+    max-width: 80%;
+    padding: 10px 15px;
+    border-radius: 15px;
+    font-size: 0.9rem;
+    line-height: 1.4;
+    word-wrap: break-word;
+}
+
+/* Mesajul MEU (Client) -> Dreapta, Verde */
+.msg-me {
+    align-self: flex-end;
+    background-color: #2ecc71;
+    color: white;
+    border-bottom-right-radius: 2px;
+}
+
+/* Mesajul ADMINULUI -> Stânga, Gri */
+.msg-other {
+    align-self: flex-start;
+    background-color: #e5e5ea;
+    color: #333;
+    border-bottom-left-radius: 2px;
+}
+
+.msg-time {
+    display: block;
+    font-size: 0.65rem;
+    margin-top: 5px;
+    opacity: 0.7;
+    text-align: right;
+}
+/* --- ADMIN CHAT LAYOUT --- */
+
+/* Containerul principal care ține lista și chat-ul */
+.admin-chat-layout {
+    display: flex;
+    height: 600px; /* Înălțime fixă pentru chat */
+    border: 1px solid #ddd;
+    background-color: white;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-top: 20px;
+}
+
+/* --- Partea Stângă: LISTA CLIENȚI --- */
+.chat-sidebar {
+    width: 30%;
+    border-right: 1px solid #eee;
+    background-color: #f9f9f9;
+    display: flex;
+    flex-direction: column;
+}
+
+.chat-sidebar-header {
+    padding: 15px;
+    background-color: #34495e;
+    color: white;
+    font-weight: bold;
+    text-align: center;
+}
+
+.chat-users-list {
+    flex: 1;
+    overflow-y: auto;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.chat-user-item {
+    padding: 15px;
+    border-bottom: 1px solid #eee;
+    cursor: pointer;
+    transition: background 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.chat-user-item:hover {
+    background-color: #ecf0f1;
+}
+
+.chat-user-item.active {
+    background-color: #dfe6e9;
+    border-left: 4px solid #3498db;
+}
+
+.user-avatar-placeholder {
+    width: 35px;
+    height: 35px;
+    background-color: #bdc3c7;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+/* --- Partea Dreaptă: CONVERSAȚIA --- */
+.chat-main-area {
+    width: 70%;
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+}
+
+/* Header-ul conversației (numele clientului selectat) */
+.chat-conversation-header {
+    padding: 15px;
+    border-bottom: 1px solid #eee;
+    font-weight: bold;
+    color: #2c3e50;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Zona de mesaje (scrollabilă) */
+.admin-messages-box {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+    background-color: #fcfcfc;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* Input-ul de răspuns */
+.admin-chat-input-area {
+    padding: 15px;
+    border-top: 1px solid #eee;
+    display: flex;
+    gap: 10px;
+    background-color: white;
+}
+
+.admin-chat-input-area input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.admin-chat-input-area button {
+    padding: 10px 20px;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+/* Bule mesaje (Reutilizăm stilul sau îl definim specific) */
+.msg-bubble {
+    max-width: 70%;
+    padding: 10px 15px;
+    border-radius: 10px;
+    font-size: 14px;
+    line-height: 1.4;
+}
+
+.msg-admin { /* Mesajele mele (Admin) */
+    align-self: flex-end;
+    background-color: #3498db;
+    color: white;
+    border-bottom-right-radius: 2px;
+}
+
+.msg-client { /* Mesajele clientului */
+    align-self: flex-start;
+    background-color: #ecf0f1;
+    color: #2c3e50;
+    border-bottom-left-radius: 2px;
+}
+/* =========================================
+   STILURI IZOLATE PENTRU PAGINA DE COȘ
+   ========================================= */
+
+
+
+#cart-count-badge {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background: red;
+    color: white;
+    font-size: 11px;
+    padding: 2px 6px;
+    border-radius: 50%;
+}
+
+.login-btn {
+    background: #2c3e50;
+    color: white;
+    padding: 8px 18px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+/* ================= CART PAGE ================= */
+
+#cart-page-scope {
+    padding: 40px 20px;
+    background: #f8f9fa;
+}
+
+/* Container principal */
+.cart-main-container {
+    max-width: 1100px;
+    margin: 0 auto;
+    background: #ffffff;
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.05);
+}
+
+.cart-main-container h1 {
+    font-size: 32px;
+    font-weight: 800;
+    margin-bottom: 30px;
+    color: #1a1a1a;
+}
+
+/* ================= TABEL ================= */
+
+.table-scroll-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin-bottom: 20px;
+}
+
+.cart-table-unique {
+    width: 100%;
+    min-width: 700px;
+    border-collapse: separate;
+    border-spacing: 0 15px;
+}
+
+.cart-table-unique th {
+    font-size: 12px;
+    text-transform: uppercase;
+    color: #999;
+    padding: 10px 20px;
+    text-align: left;
+    white-space: nowrap;
+}
+
+.cart-table-unique td {
+    background: #fff;
+    padding: 20px;
+    font-size: 15px;
+    color: #333;
+    border-top: 1px solid #eee;
+    border-bottom: 1px solid #eee;
+    white-space: nowrap;
+}
+
+.cart-table-unique td:first-child {
+    border-left: 1px solid #eee;
+    border-radius: 12px 0 0 12px;
+    font-weight: 700;
+}
+
+.cart-table-unique td:last-child {
+    border-right: 1px solid #eee;
+    border-radius: 0 12px 12px 0;
+}
+
+/* Badge cantitate */
+.qty-badge {
+    background: #f0f2f5;
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-weight: 600;
+}
+
+/* Buton ștergere */
+.btn-delete-cart {
+    background: transparent;
+    border: 1.5px solid #ffccd2;
+    color: #ff4757;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.btn-delete-cart:hover {
+    background: #ff4757;
+    color: white;
+}
+
+/* ================= FOOTER SUMAR CART ================= */
+
+.cart-footer-summary {
+    margin-top: 30px;
+    padding-top: 30px;
+    border-top: 2px solid #f1f1f1;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 40px;
+    flex-wrap: wrap;
+}
+
+.total-box {
+    display: flex;
+    flex-direction: column;
+    text-align: right;
+}
+
+.total-amount-label {
+    font-size: 13px;
+    color: #777;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.total-amount-value {
+    font-size: 32px;
+    font-weight: 900;
+    color: #2ecc71;
+}
+
+.btn-go-checkout {
+    background: #2c3e50;
+    color: white;
+    padding: 18px 40px;
+    border: none;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.25s;
+}
+
+.btn-go-checkout:hover {
+    background: #1a252f;
+    transform: translateY(-2px);
+}
+
+/* ================= EMPTY CART ================= */
+
+#empty-cart-msg {
+    text-align: center;
+    padding: 60px 0;
+}
+
+.btn-back-shop {
+    display: inline-block;
+    padding: 12px 30px;
+    background: #3498db;
+    color: white;
+    border-radius: 10px;
+    text-decoration: none;
+    font-weight: 600;
+}
+@media (max-width: 768px) {
+
+    .navbar {
+        padding: 14px 20px;
+    }
+
+    .cart-main-container {
+        padding: 20px;
+    }
+
+    .cart-footer-summary {
+        flex-direction: column;
+        align-items: stretch;
+        text-align: center;
+        gap: 20px;
+    }
+
+    .total-box {
+        align-items: center;
+        text-align: center;
+    }
+
+    .btn-go-checkout {
+        width: 100%;
+    }
+
+    .cart-table-unique th,
+    .cart-table-unique td {
+        font-size: 14px;
+        padding: 14px 10px;
+    }
+}
+/* --- MINI-CART POPUP STYLE --- */
+
+#mini-cart-popup {
+    position: absolute;
+    top: 50px;
+    right: 0;
+    width: 320px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    z-index: 1000;
+    padding: 15px;
+    border: 1px solid #eee;
+    transition: all 0.3s ease;
+}
+
+/* Clase pentru Show/Hide */
+.mini-cart-hidden {
+    display: none;
+    opacity: 0;
+    transform: translateY(-10px);
+}
+
+.mini-cart-visible {
+    display: block !important;
+    opacity: 1 !important;
+    transform: translateY(0) !important;
+}
+
+.mini-cart-header {
+    font-weight: 700;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.mini-cart-body {
+    max-height: 250px;
+    overflow-y: auto;
+}
+
+.mini-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid #f9f9f9;
+    font-size: 14px;
+}
+
+.mini-item-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.mini-item-name {
+    font-weight: 600;
+    color: #2c3e50;
+}
+
+.mini-item-details {
+    font-size: 12px;
+    color: #7f8c8d;
+}
+
+.mini-cart-footer {
+    margin-top: 15px;
+    padding-top: 10px;
+    border-top: 2px solid #f8f9fa;
+}
+
+.mini-cart-total {
+    font-weight: bold;
+    font-size: 16px;
+    margin-bottom: 10px;
+    text-align: right;
+}
+
+.btn-view-cart {
+    display: block;
+    background: #34495e;
+    color: white;
+    text-align: center;
+    padding: 10px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.btn-view-cart:hover {
+    background: #2c3e50;
+}
+/* Butonul de redirecționare către Login din Coș */
+.btn-login-redirect {
+    display: inline-block;
+    background-color: #3498db; /* Albastru */
+    color: white;
+    padding: 12px 30px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 16px;
+    transition: background 0.3s ease;
+    box-shadow: 0 4px 6px rgba(52, 152, 219, 0.2);
+}
+
+.btn-login-redirect:hover {
+    background-color: #2980b9; /* Albastru mai închis la hover */
+    transform: translateY(-2px);
+}
+/* =========================================
+   NAVBAR CART & MINI-POPUP LOGIC
+   ========================================= */
+
+/* 1. Containerul principal (Ancora) */
+.cart-wrapper {
+    position: relative;
+    padding: 10px 5px; /* Zonă de detecție mouse */
+    display: flex;
+    align-items: center;
+}
+
+/* 2. BULINA (Badge-ul) - Definiție UNICĂ */
+#cart-count-badge {
+    position: absolute;
+    top: -2px;      /* Poziționat deasupra iconiței */
+    right: -2px;
+    background-color: #ff4757;
+    color: white;
+    font-size: 10px;
+    font-weight: bold;
+    min-width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    border: 2px solid white;
+    
+    /* CENTRARE TEXT ÎN INTERIOR */
+    display: none; /* ASCUNS IMPLICIT */
+    justify-content: center;
+    align-items: center;
+    z-index: 10;
+}
+
+/* 3. CLASA DE AFIȘARE (Controlată din JS) */
+#cart-count-badge.show-badge {
+    display: flex !important; /* Apare doar când are această clasă */
+}
+
+/* 4. POP-UP-UL (Rezumatul) */
+.mini-cart-popup {
+    position: absolute;
+    top: 100%; /* Apare exact sub navbar */
+    right: 0;
+    width: 300px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    padding: 15px;
+    z-index: 9999;
+    
+    /* Starea inițială: Ascuns */
+    visibility: hidden;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(10px);
+    transition: all 0.2s ease-in-out;
+}
+
+/* 5. PODUL INVIZIBIL (Menține pop-up-ul deschis când miști mouse-ul spre el) */
+.mini-cart-popup::before {
+    content: "";
+    position: absolute;
+    top: -25px; /* Acoperă golul dintre nav și popup */
+    left: 0;
+    width: 100%;
+    height: 25px;
+    background: transparent;
+}
+
+/* 6. EFECTUL DE HOVER */
+.cart-wrapper:hover .mini-cart-popup {
+    visibility: visible;
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+}
+
+/* Stiluri rapide pentru interiorul pop-up-ului (Mini-items) */
+.mini-item {
+    border-bottom: 1px solid #f1f1f1;
+    padding: 8px 0;
+}
+.mini-item:last-child {
+    border-bottom: none;
+}
+@keyframes popBadge {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.4); }
+    100% { transform: scale(1); }
+}
+
+#cart-count-badge.show-badge {
+    display: flex !important;
+    animation: popBadge 0.3s ease-out; /* Bulina "sare" puțin când apare/se schimbă */
+}
+
+
+
+/* --- CHECKOUT ISOLATED STYLES --- */
+
+.checkout-wrapper {
+    flex: 1 0 auto; /* Forțează acest div să ocupe spațiul disponibil și să împingă footer-ul */
+    background: #f4f7f6;
+    padding: 40px 20px;
+    padding-top: 100px; /* Adăugat pentru a nu intra sub Navbar-ul fix */
+}
+.checkout-container { 
+    display: flex; 
+    max-width: 1100px; 
+    margin: 0 auto; 
+    gap: 30px; 
+}
+
+.checkout-main { 
+    flex: 2; 
+    background: white; 
+    padding: 30px; 
+    border-radius: 12px; 
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1); 
+}
+
+.checkout-sidebar { 
+    flex: 1; 
+}
+.order-summary-box { 
+    background: white; 
+    padding: 25px; 
+    border-radius: 12px; 
+    position: sticky; 
+    top: 20px; 
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.form-group {
+     margin-bottom: 20px; 
+    }
+.form-group label {
+    display: block; 
+    margin-bottom: 8px; 
+    font-weight: 600; 
+    color: #333; 
+}
+.form-group input, .form-group textarea { 
+    width: 100%; 
+    padding: 12px;
+     border: 1px solid #ddd; 
+     -radius: 6px; 
+     font-size: 15px;
+}
+
+.readonly-field { 
+    background-color: #f9f9f9; 
+    cursor: not-allowed;
+     border-color: #eee; 
+     color: #666; 
+    }
+
+.payment-options { 
+    display: flex; 
+    flex-direction: column; 
+    gap: 10px; 
+    margin-bottom: 20px;
+ }
+.option-card { 
+    padding: 15px; 
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    cursor: pointer; 
+    display: flex; 
+    gap: 10px; 
+}
+
+.card-details-hidden {
+     display: none; 
+     background: #f9f9f9;
+      padding: 20px; 
+      border-radius: 8px;
+       margin-top: 10px; 
+    }
+.card-details-visible { 
+    display: block; 
+}
+
+.btn-order { 
+    width: 100%; 
+    padding: 18px; 
+    background: #2ecc71; 
+    color: white;
+    border: none; 
+    border-radius: 8px;
+    font-size: 18px; 
+    font-weight: bold; 
+    cursor: pointer;
+    transition: 0.3s;
+}
+.btn-order:hover { 
+    background: #27ae60;
+ }
+
+.summary-item { 
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 12px;
+    color: #555;
+}
+.total-line { 
+    display: flex;
+    justify-content: space-between;
+    font-size: 20px;
+    font-weight: bold;
+    margin-top: 15px;
+    color: #2c3e50;
+}
+
+
+/* ======================================
+            comenzile mele 
+====================================== */
+/* Centrarea paginii și fundalul */
+.orders-page {
+    flex: 1 0 auto; /* Această linie este MAGICĂ: face main-ul să ocupe tot spațiul disponibil */
+    padding-top: 100px;
+    padding-bottom: 50px;
+    background-color: #f8f9fa;
+    width: 100%;
+    display: block !important;
+}
+/* Containerul care limitează lățimea */
+.container-order {
+    width: 90%;
+    max-width: 800px; /* Valoare ideală pentru a nu părea prea lat */
+    margin: 0 auto;
+}   
+
+.page-title {
+    margin-bottom: 30px;
+    font-size: 24px;
+    color: #2c3e50;
+    border-left: 5px solid #00a6ff;
+    padding-left: 15px;
+    text-align: left;
+}
+
+.orders-card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+    overflow-x: auto; /* Permite scroll orizontal DOAR dacă tabelul e prea lat */
+    width: 100%;
+}
+
+.orders-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+/* Spațiere mai generoasă în celule pentru lizibilitate */
+.orders-table th, 
+.orders-table td {
+    padding: 16px 24px;
+    text-align: left;
+}
+
+.orders-table th {
+    background-color: #fcfcfc;
+    border-bottom: 2px solid #f1f3f5;
+    font-size: 12px;
+    color: #888;
+}
+
+/* Stilizare Badges (îmbunătățită față de imagine) */
+.badge {
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.badge.paid { 
+    background-color: #e6fffa; 
+    color: #234e52; 
+    border: 1px solid #b2f5ea; 
+}
+.badge.pending { 
+    background-color: #fffaf0; 
+    color: #7b341e; 
+    border: 1px solid #feebc8; 
+}
+.badge.cancelled { 
+    background-color: #fff5f5; 
+    color: #822727; 
+    border: 1px solid #feb2b2; 
+}
+
+/* ==========================================
+   1. PAGINA DE PROFIL (LAYOUT)
+   ========================================== */
+/* ==========================================
+   DESIGN PREMIUM PROFIL - 2025 LOOK
+   ========================================== */
+
+/* Resetare și fonturi de bază pentru o bază curată */
+:root {
+    --primary-blue: #00a6ff;
+    --primary-dark: #008ecc;
+    --danger-red: #e74c3c;
+    --text-dark: #2c3e50;
+    --text-muted: #95a5a6;
+    --bg-light: #f4f7f9; /* Un gri-albăstrui foarte deschis, modern */
+    --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+    --card-shadow-hover: 0 15px 30px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+.profile-page {
+    flex: 1 0 auto;    /* "Magia" salvată pentru footer */
+    display: block;    /* Permite Grid-ului din interior să funcționeze */
+    padding-top: 60px;
+    padding-bottom: 120px;
+    background-color: #f8f9fa;
+}
+
+.container-profile {
+    width: 92%;
+    max-width: 1000px; /* Lățime suficientă pentru două carduri de 400px + gap */
+    margin: 0 auto;
+}
+.page-title {
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--text-dark);
+    margin-bottom: 30px;
+    letter-spacing: -0.5px;
+}
+
+/* GRID-UL PRINCIPAL */
+.profile-grid {
+    display: grid;
+    /* Ajustăm minmax la 350px ca să stea mai bine pe laptopuri mai mici */
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 30px;
+    align-items: start;
+}
+/* ==========================================
+   CARDURILE "PLUTITOARE"
+   ========================================== */
+.profile-card {
+    background: white;
+    border-radius: 16px; /* Colțuri mai rotunjite */
+    box-shadow: var(--card-shadow);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid rgba(255, 255, 255, 0.5); /* Bordură subtilă */
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.profile-card:hover {
+    box-shadow: var(--card-shadow-hover);
+    transform: translateY(-3px); /* Efect subtil de ridicare la hover */
+}
+
+/* Header Card */
+.card-header {
+    padding: 25px 30px;
+    border-bottom: 1px solid #f0f2f5;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    background: #ffffff;
+}
+
+.card-icon {
+    width: 28px;
+    height: 28px;
+}
+.accent-blue { 
+    color: var(--primary-blue); 
+}
+.accent-green { 
+    color: #2ecc71; 
+}
+
+.card-header h3 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text-dark);
+}
+
+/* Body Card */
+.card-body {
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    flex-grow: 1;
+}
+.card-body.gap-large { gap: 30px; }
+
+/* Footer Card */
+.card-footer {
+    padding: 20px 30px;
+    background: #fcfdfe;
+    border-top: 1px solid #f0f2f5;
+}
+
+/* ==========================================
+   INPUT-URI MODERNE CU ICONIȚE
+   ========================================== */
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.form-group label {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-dark);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.input-icon {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%); /* O centrează perfect pe verticală */
+    color: #95a5a6;
+    pointer-events: none; /* Permite click-ul "prin" iconiță pe input */
+    z-index: 5;
+}
+
+.profile-input {
+    width: 100%;
+    padding: 14px 15px 14px 48px !important; /* 48px în stânga forțează textul să înceapă după iconiță */
+    border: 2px solid #eef1f6;
+    border-radius: 10px;
+    font-size: 15px;
+    background: #fdfeff;
+}
+
+/* Efect de focus "wow" */
+.input-wrapper:focus-within .profile-input {
+    border-color: var(--primary-blue);
+    background: white;
+    box-shadow: 0 0 0 4px rgba(0, 166, 255, 0.1); /* Halou albastru */
+}
+.input-wrapper:focus-within .input-icon {
+    color: var(--primary-blue);
+}
+
+/* Input dezactivat (Email) */
+.disabled-wrapper .profile-input {
+    background-color: #f8f9fa;
+    border-color: #e9ecef;
+    color: #6c757d;
+    cursor: not-allowed;
+}
+.locked-badge {
+    position: absolute;
+    right: 15px;
+    font-size: 11px;
+    font-weight: bold;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    background: #e9ecef;
+    padding: 4px 8px;
+    border-radius: 6px;
+}
+
+/* ==========================================
+   NEWSLETTER BOX PREMIUM
+   ========================================== */
+.newsletter-box-premium {
+    background: linear-gradient(to right, #f8fbff, #ffffff);
+    border: 1px solid #eef6fc;
+    padding: 20px;
+    border-radius: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.news-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 700;
+    color: var(--text-dark);
+    font-size: 15px;
+}
+.news-subtitle {
+    display: block;
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-top: 4px;
+    margin-left: 24px;
+}
+
+/* Separator subtil */
+.separator-soft {
+    border: 0;
+    height: 1px;
+    background: #f0f2f5;
+    margin: 10px 0;
+}
+
+/* ==========================================
+   BUTOANE REIMAGINATE
+   ========================================== */
+.btn-save {
+    width: 100%;
+    padding: 14px;
+    border: none;
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 15px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+.btn-primary {
+    background: var(--primary-blue);
+    color: white;
+    box-shadow: 0 4px 12px rgba(0, 166, 255, 0.2);
+}
+.btn-primary:hover {
+    background: var(--primary-dark);
+    box-shadow: 0 6px 15px rgba(0, 166, 255, 0.3);
+    transform: translateY(-2px);
+}
+
+.btn-danger-soft {
+    background: white;
+    color: var(--danger-red);
+    border: 2px solid #fde8e6;
+}
+.btn-danger-soft:hover {
+    background: #fef2f1;
+    border-color: var(--danger-red);
+}
+
+/* Stilurile pentru Switch rămân aceleași, sunt ok */
+/* ... (codul existent pentru .switch, .slider) ... */
+
+/* ==========================================
+   4. BUTONUL SWITCH (NEWSLETTER)
+   ========================================== */
+.newsletter-area {
+    background-color: #f1f8ff; /* Fundal discret albastru pentru zonă */
+    padding: 15px;
+    border-radius: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.switch-label {
+    font-weight: 600;
+    font-size: 14px;
+    color: #2c3e50;
+}
+
+/* Mecanismul de Switch */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 46px;
+    height: 24px;
+}
+
+.switch input { 
+    opacity: 0; 
+    width: 0; 
+    height: 0; 
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+    border-radius: 34px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 18px; width: 18px;
+    left: 3px; bottom: 3px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+}
+
+input:checked + .slider {
+    background-color: #00a6ff;
+}
+
+input:checked + .slider:before {
+    transform: translateX(22px);
+}
+
+/* ==========================================
+   5. BUTOANE ȘI BADGE-URI
+   ========================================== */
+.btn-save {
+    background-color: #2c3e50;
+    color: white;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    margin-top: 10px;
+}
+
+.btn-save:hover {
+    background-color: #1a252f;
+}
+
+.btn-danger {
+    background-color: #ffffff;
+    color: #e74c3c;
+    border: 1px solid #e74c3c;
+    margin-top: 15px;
+}
+
+.btn-danger:hover {
+    background-color: #fff5f5;
+}
+
+.badge-fidel {
+    display: inline-block;
+    background: linear-gradient(135deg, #ffd700, #ffae00);
+    color: #000;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 800;
+    margin-left: 10px;
+    box-shadow: 0 4px 10px rgba(255, 215, 0, 0.3);
+}
+/* ==========================================
+   STILIZARE AVATAR "INSTAGRAM STYLE"
+   ========================================== */
+.avatar-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.avatar-wrapper {
+    width: 130px;
+    height: 130px;
+    margin: 0 auto 15px auto;
+    position: relative;
+}
+/* Imaginea rotundă */
+.profile-avatar {
+    width: 130px;
+    height: 130px;
+    border-radius: 50%;
+    object-fit: cover; /* REPARĂ ASPECTUL TURTIT: Taie din imagine pentru a păstra proporțiile */
+    border: 5px solid white;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+    display: block;
+}
+
+.profile-avatar:hover {
+    transform: scale(1.03); /* Efect subtil de zoom la hover */
+}
+
+/* Butonul mic de upload */
+.btn-upload-overlay {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    background: var(--primary-blue); /* Folosim culoarea ta de accent */
+    color: white;
+    border: 3px solid white;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+    transition: all 0.2s ease;
+}
+
+.btn-upload-overlay:hover {
+    background: var(--primary-dark);
+    transform: scale(1.1);
+}
+
+.btn-upload-overlay i {
+    width: 18px;
+    height: 18px;
+}
+
+/* Numele de sub avatar */
+#avatar-fullname-display {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 800;
+    color: var(--text-dark);
+}
+.btn-delete-avatar {
+    position: absolute;
+    bottom: 5px;
+    left: 5px; /* Îl punem în stânga jos */
+    background: white;
+    color: #e74c3c;
+    border: 2px solid #fde8e6;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+    transition: all 0.2s ease;
+}
+
+.btn-delete-avatar:hover {
+    background: #fef2f1;
+    transform: scale(1.1);
+}
+
+.btn-delete-avatar i {
+    width: 16px;
+    height: 16px;
+}
+
+

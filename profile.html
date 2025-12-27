@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <title>Contul Meu - CrossWears</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">  <!--asta e pt iconitele din footer -->
+</head>
+<nav class="navbar">
+    <div class="nav-left">
+        <a href="index.html" class="nav-logo">
+            <img src="image/logo.png" alt="Logo">
+        </a>
+
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="shop.html">Shop</a></li>
+            <li><a href="contact.html">Contact</a></li>
+        </ul>
+    </div>
+
+    <div class="nav-right">
+      <div class="cart-wrapper">
+        <a href="cart.html" class="nav-icon" id="cart-nav-link">
+            <i data-lucide="shopping-cart"></i>
+            <span id="cart-count-badge">0</span>
+        </a>
+
+        <div id="mini-cart-popup" class="mini-cart-popup">
+            <div class="mini-cart-header">Rezumat Coș</div>
+            <div id="mini-cart-items" class="mini-cart-body">
+                </div>
+            <div class="mini-cart-footer">
+                <div class="mini-cart-total">Total: <span id="mini-cart-total-price">0</span> RON</div>
+                <a href="cart.html" class="btn-view-cart">Vezi detalii</a>
+            </div>
+        </div>
+    </div>
+
+        <a href="login.html" id="nav-login-btn" class="login-btn">
+            Log In
+        </a>
+
+        <div class="profile-dropdown" id="nav-profile-section" style="display: none;">
+            <a href="#" class="nav-icon">
+                <i data-lucide="user"></i>
+            </a>
+
+            <div class="dropdown-content">
+                <a href="profile.html"><i data-lucide="user-check" style="width:16px;"></i> Contul meu</a>
+                <a href="orders.html"><i data-lucide="package" style="width:16px;"></i> Comenzile mele</a>
+                <a href="favorites.html"><i data-lucide="heart" style="width:16px;"></i> Favorite</a>
+                
+                <a href="admin-dashboard.html" id="admin-link" style="color: #e74c3c; font-weight: 600; display: none;">
+                    <i data-lucide="shield-alert" style="width:16px;"></i> Admin Panel
+                </a>
+                
+                <hr style="border: 0; border-top: 1px solid #eee; margin: 5px 0;">
+                
+                <a href="javascript:void(0)" id="logout-btn" style="color: #666;">Deconectare</a>
+            </div>
+        </div>
+    </div>
+</nav>
+<body>
+    <main class="profile-page">
+        <div class="container-order"> <h1 class="page-title" id="profile-title">Setări Cont</h1>
+
+            <div class="profile-grid">
+    <div class="profile-card">
+    <div class="card-header">
+        <i data-lucide="user-circle" class="card-icon accent-blue"></i>
+        <h3>Informații Profil</h3>
+    </div>
+    
+    <div class="card-body">
+        <div class="avatar-container">
+            <div class="avatar-wrapper">
+                <img id="profile-image" 
+                     src="http://localhost:8080/api/user/avatar" 
+                     onerror="this.onerror=null; this.src='https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png';" 
+                     alt="Profile Picture" class="profile-avatar">
+                <button class="btn-upload-overlay" onclick="triggerFileInput()">
+                    <i data-lucide="camera"></i>
+                </button>
+                <button class="btn-delete-avatar" onclick="removeAvatar()" title="Șterge poza">
+                    <i data-lucide="trash-2"></i>
+                </button>
+            </div>
+            <input type="file" id="hidden-avatar-input" onchange="uploadAvatarFile()" hidden>
+            <h2 id="avatar-fullname-display">Se încarcă...</h2>
+        </div>
+
+        <hr class="separator-soft">
+
+        <div class="form-group">
+            <label for="edit-fullname">Nume Complet</label>
+            <div class="input-wrapper">
+                <i data-lucide="user" class="input-icon"></i>
+                <input type="text" id="edit-fullname" class="profile-input" placeholder="Ex: Ion Popescu">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="edit-email">Email (ID Cont)</label>
+            <div class="input-wrapper disabled-wrapper">
+                <i data-lucide="mail" class="input-icon"></i>
+                <input type="email" id="edit-email" class="profile-input" disabled>
+                <span class="locked-badge"><i data-lucide="lock"></i> Blocat</span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="edit-phone">Telefon</label>
+            <div class="input-wrapper">
+                <i data-lucide="phone" class="input-icon"></i>
+                <input type="text" id="edit-phone" class="profile-input" placeholder="Ex: 07xx xxx xxx">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="edit-address">Adresă Implicită Livrare</label>
+            <div class="input-wrapper">
+                <i data-lucide="map-pin" class="input-icon" style="top: 15px;"></i>
+                <textarea id="edit-address" class="profile-input" rows="3" style="padding-left: 45px;" placeholder="Strada, Număr, Oraș..."></textarea>
+            </div>
+        </div>
+    </div>
+
+    <div class="card-footer">
+        <button class="btn-save btn-primary" onclick="updateProfileInfo()">
+            <i data-lucide="save"></i> Salvează Modificările
+        </button>
+    </div>
+</div>
+
+    <div class="profile-card">
+        <div class="card-header">
+            <i data-lucide="shield-check" class="card-icon accent-green"></i>
+            <h3>Securitate & Preferințe</h3>
+        </div>
+        
+        <div class="card-body gap-large">
+            <div class="newsletter-box-premium">
+                <div class="news-text">
+                    <span class="news-title"><i data-lucide="mail-open"></i> Abonare Newsletter</span>
+                    <span class="news-subtitle">Primești oferte și noutăți pe email.</span>
+                </div>
+                <label class="switch">
+                    <input type="checkbox" id="newsletter-status" onchange="toggleNewsletter()">
+                    <span class="slider round"></span>
+                </label>
+            </div>
+
+            <hr class="separator-soft">
+
+            <div class="security-section">
+                <h4><i data-lucide="key"></i> Schimbă Parola</h4>
+                <div class="form-group">
+                    <input type="password" id="old-password" placeholder="Parola Actuală" class="profile-input">
+                </div>
+                <div class="form-group">
+                    <input type="password" id="new-password" placeholder="Parola Nouă" class="profile-input">
+                </div>
+            </div>
+        </div>
+        <div class="card-footer">
+            <button class="btn-save btn-danger-soft" onclick="changePassword()">
+                Actualizează Parola
+            </button>
+        </div>
+    </div>
+</div>
+        </div>
+    </main>
+    <footer>
+  <div class="container">
+
+    <div class="sec about">
+      <h2>CrossWears</h2>
+      <p>
+      Suntem dedicați răspândirii Evangheliei prin artă vestimentară. 
+      Fiecare tricou este o mărturie și o invitație la dialog. 
+      Purtăm Credința cu Mândrie.
+      </p>
+    </div>
+
+       <div class="sec office">
+      <h2>Office</h2>
+      <p>Strd. Mihai Eminescu, Nr.10, <br>Sector 7,<br>București,<br>Romania,</p>
+      <p>contact.crosswears@gmail.com</p>
+      <p>+40 723 456 789</p>
+    </div>
+
+    <div class="sec links">
+      <h2>Links</h2>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="shop.html">Shop</a></li>
+        <li><a href="contact.html">Contacts</a></li>
+      </ul>
+    </div>
+
+    <div class="sec newsletter">
+      <h2>Newsletter</h2>
+        <div class="newsletter-box">
+        <input type="email" id="footer-email" placeholder="Enter your email">
+        <button onclick="subscribeNewsletter()">&#10140;</button>
+    </div>
+      <div class="social">
+        <a href="https://www.linkedin.com/in/denis-%C8%9Bigan-379a5436a/" target="_blank"><i class="fab fa-facebook"></i></a>
+        <a href="https://www.linkedin.com/in/denis-%C8%9Bigan-379a5436a/" target="_blank"><i class="fab fa-instagram"></i></a>
+        <a href="https://www.linkedin.com/in/denis-%C8%9Bigan-379a5436a/" target="_blank"><i class="fab fa-twitter"></i></a>
+      </div>
+    </div>
+
+  </div>
+
+  <p class="copyright">© 2025 CrossWears. Toate drepturile rezervate.</p>
+</footer>
+
+<div id="chat-toggle-btn" onclick="toggleChatWindow()">
+    <i class="fas fa-comments"></i>
+</div>
+
+<div id="chat-window" class="chat-container" style="display: none;">
+    
+    <div class="chat-header">
+        <span>💬 Suport Live</span>
+        <button onclick="toggleChatWindow()" class="close-chat-btn">&times;</button>
+    </div>
+
+    <div id="chat-messages" class="chat-messages">
+        <p class="chat-placeholder">Bună! Cu ce te putem ajuta?</p>
+    </div>
+
+    <div class="chat-input-area">
+        <input type="text" id="chat-input" placeholder="Scrie un mesaj..." onkeypress="handleEnter(event)">
+        <button onclick="sendMessage()" class="send-btn">
+            <i class="fas fa-paper-plane"></i>
+        </button>
+    </div>
+</div>
+
+    <script src="general.js"></script>
+    <script src="profile.js"></script>
+</body>
+</html>
