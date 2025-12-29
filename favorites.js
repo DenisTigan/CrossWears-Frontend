@@ -9,7 +9,6 @@ document.addEventListener("DOMContentLoaded", () => {
 function loadFavorites() {
     const token = localStorage.getItem("userToken");
     
-    // Verificăm dacă e logat
     if (!token) {
         container.innerHTML = `
             <div style="text-align:center; grid-column: 1/-1;">
@@ -19,34 +18,41 @@ function loadFavorites() {
         return;
     }
 
-    // Cerem lista de la Backend
     axios.get(`${API_BASE}/favorites/my-list`, {
         headers: { 'Authorization': 'Bearer ' + token }
     })
     .then(response => {
         const products = response.data;
+        container.innerHTML = "";
 
-        // Dacă lista e goală, arătăm mesajul "Nu ai produse"
         if (products.length === 0) {
             container.style.display = "none";
             emptyMsg.style.display = "block";
             return;
         }
 
-        // Randăm produsele
+        container.style.display = "grid";
+        emptyMsg.style.display = "none";
+
         products.forEach(p => {
             const card = document.createElement("div");
             card.classList.add("product-card");
-            // Adăugăm o tranziție CSS pentru efectul de ștergere
             card.style.transition = "opacity 0.3s ease, transform 0.3s ease";
 
-            const imageUrl = `${API_BASE}/product/${p.productId}/image`;
-            const isAvailable = p.available === true && p.quantity > 0;
+            // --- LOGICĂ NOUĂ IMAGINE ---
+            // Luăm prima imagine din galerie pentru thumbnail
+            const thumbId = (p.images && p.images.length > 0) ? p.images[0].imageId : null;
+            const imageUrl = thumbId ? `${API_BASE}/product/image/${thumbId}` : 'placeholder.jpg';
+
+            // --- LOGICĂ NOUĂ DISPONIBILITATE ---
+            // Produsul e disponibil doar dacă flag-ul e true ȘI există cel puțin o variantă cu stoc > 0
+            const hasStock = p.variants && p.variants.some(v => v.quantity > 0);
+            const isAvailable = p.available === true && hasStock;
 
             card.innerHTML = `
                 <div class="product-img-container">
                     <i class="fas fa-heart heart-icon active" 
-                       onclick="removeFavoriteFromList(event, ${p.productId}, this)">
+                        onclick="removeFavoriteFromList(event, ${p.productId}, this)">
                     </i>
                     
                     <a href="product.html?id=${p.productId}" class="product-link">
@@ -62,7 +68,7 @@ function loadFavorites() {
                 <div class="product-actions">
                     ${
                         isAvailable
-                        ? `<button class="btn-add-cart" onclick="addToCart(${p.productId})">Adaugă în coș</button>`
+                        ? `<button class="btn-add-cart" onclick="openVariantModal(${p.productId})">Adaugă în coș</button>`
                         : `<button class="btn-out-of-stock" disabled>Stoc epuizat</button>`
                     }
                 </div>
@@ -77,43 +83,33 @@ function loadFavorites() {
     });
 }
 
-// --- FUNCȚIA DE ȘTERGERE DIN LISTĂ ---
+// Folosim aceeași funcție de toggle de pe Shop/Product pentru a șterge
 function removeFavoriteFromList(event, productId, iconElement) {
-    event.stopPropagation(); // Nu intra pe pagina produsului
-    
-    // 1. Efect vizual rapid (Optimistic UI)
+    event.stopPropagation();
     const card = iconElement.closest(".product-card");
-    
-    // Facem cardul transparent și îl micșorăm puțin
+    const token = localStorage.getItem("userToken");
+
     card.style.opacity = "0";
     card.style.transform = "scale(0.9)";
 
-    // După 300ms (cât durează animația), îl scoatem de tot din HTML
-    setTimeout(() => {
-        card.remove();
-
-        // Verificăm dacă a rămas lista goală după ștergere
-        if (container.children.length === 0) {
-            container.style.display = "none";
-            emptyMsg.style.display = "block";
-        }
-    }, 300);
-
-    // 2. Trimitem cererea la server în fundal
-    const token = localStorage.getItem("userToken");
     axios.post(`${API_BASE}/favorites/toggle/${productId}`, {}, {
         headers: { 'Authorization': 'Bearer ' + token }
     })
-    .then(res => {
-        console.log("Produs șters din favorite (Server confirm)");
+    .then(() => {
+        setTimeout(() => {
+            card.remove();
+            if (container.children.length === 0) {
+                container.style.display = "none";
+                emptyMsg.style.display = "block";
+            }
+        }, 300);
     })
     .catch(err => {
-        console.error("Eroare la ștergere:", err);
-        alert("A apărut o eroare la ștergere. Dă refresh.");
+        card.style.opacity = "1";
+        card.style.transform = "scale(1)";
+        alert("Eroare la eliminare.");
     });
 }
 
-function addToCart(id) {
-    // Logica de cart (placeholder)
-    alert("Produs adăugat în coș! ID: " + id);
-}
+// Notă: Funcția openVariantModal(productId) trebuie să fie disponibilă global 
+// (mut-o în general.js sau asigură-te că shop.js este inclus)

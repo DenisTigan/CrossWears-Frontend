@@ -382,4 +382,70 @@ function subscribeNewsletter() {
             alert(err.response?.data || "Eroare la abonare.");
         });
 }
+document.addEventListener("DOMContentLoaded", () => {
+    const mobileBtn = document.getElementById("mobile-menu-btn");
+    const sidebar = document.getElementById("mobile-sidebar");
+    const closeBtn = document.getElementById("mobile-sidebar-close");
+    const overlay = document.getElementById("sidebar-overlay");
+    const sidebarLinks = document.getElementById("sidebar-links-container");
 
+    // Deschidere sidebar
+    if (mobileBtn) {
+        mobileBtn.addEventListener("click", () => {
+            populateSidebar();
+            sidebar.classList.add("active");
+            overlay.style.display = "block";
+        });
+    }
+
+    // Închidere sidebar
+    const closeMenu = () => {
+        sidebar.classList.remove("active");
+        overlay.style.display = "none";
+    };
+
+    if (closeBtn) closeBtn.addEventListener("click", closeMenu);
+    if (overlay) overlay.addEventListener("click", closeMenu);
+
+    function populateSidebar() {
+    const token = localStorage.getItem("userToken");
+    const role = localStorage.getItem("userRole");
+
+    // Link-uri de bază (Home, Shop, Contact) cu iconițe Lucide
+    let html = `
+        <li><a href="index.html"><i data-lucide="home"></i> Home</a></li>
+        <li><a href="shop.html"><i data-lucide="shopping-bag"></i> Shop</a></li>
+        <li><a href="contact.html"><i data-lucide="mail"></i> Contact</a></li>
+        <hr style="border: 0; border-top: 1px solid #eee; margin: 15px 0;">
+    `;
+
+    // Dacă e logat, adăugăm butoanele din dropdown în sidebar
+    if (token) {
+        html += `
+            <li><a href="profile.html"><i data-lucide="user"></i> Contul meu</a></li>
+            <li><a href="orders.html"><i data-lucide="package"></i> Comenzile mele</a></li>
+            <li><a href="favorites.html"><i data-lucide="heart"></i> Favorite</a></li>
+            ${role === "ROLE_ADMIN" ? '<li><a href="admin-dashboard.html" style="color:red;"><i data-lucide="shield-check" style="color:red;"></i> Admin Panel</a></li>' : ''}
+            <li><a href="javascript:void(0)" id="mobile-logout-btn" style="color:#666;"><i data-lucide="log-out"></i> Deconectare</a></li>
+        `;
+    } else {
+        html += `<li><a href="login.html"><i data-lucide="log-in"></i> Autentificare</a></li>`;
+    }
+
+    sidebarLinks.innerHTML = html;
+
+    // IMPORTANT: Spunem librăriei Lucide să deseneze iconițele noi injectate
+    if (typeof lucide !== 'undefined') {
+        lucide.createIcons();
+    }
+
+    // Atașăm logout
+    const mobileLogout = document.getElementById("mobile-logout-btn");
+    if (mobileLogout) {
+        mobileLogout.addEventListener("click", () => {
+            localStorage.clear();
+            window.location.href = "login.html";
+        });
+    }
+}
+});

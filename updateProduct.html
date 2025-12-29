@@ -24,8 +24,22 @@
   <link rel="stylesheet" href="style.css">
   <script src="https://unpkg.com/lucide@latest"></script>
 
+<div class="sidebar-overlay" id="sidebar-overlay"></div>
+<div class="mobile-sidebar" id="mobile-sidebar">
+    <div class="sidebar-header" style="background-color: #68c2f3;">
+        <img src="image/logo.png" alt="Logo" style="height: 80px;">
+        <span id="mobile-sidebar-close">&times;</span>
+    </div>
+    <ul class="sidebar-links" id="sidebar-links-container">
+        </ul>
+</div>
+
 <nav class="navbar">
     <div class="nav-left">
+        <div class="hamburger-menu" id="mobile-menu-btn">
+            <i class="fas fa-bars"></i>
+        </div>
+
         <a href="index.html" class="nav-logo">
             <img src="image/logo.png" alt="Logo">
         </a>
@@ -38,13 +52,12 @@
     </div>
 
     <div class="nav-right">
-      <div class="cart-wrapper">
-        <a href="cart.html" class="nav-icon" id="cart-nav-link">
-            <i data-lucide="shopping-cart"></i>
-            <span id="cart-count-badge">0</span>
-        </a>
-
-        <div id="mini-cart-popup" class="mini-cart-popup">
+        <div class="cart-wrapper">
+            <a href="cart.html" class="nav-icon" id="cart-nav-link">
+                <i data-lucide="shopping-cart"></i>
+                <span id="cart-count-badge">0</span>
+            </a>
+              <div id="mini-cart-popup" class="mini-cart-popup">
             <div class="mini-cart-header">Rezumat Coș</div>
             <div id="mini-cart-items" class="mini-cart-body">
                 </div>
@@ -53,29 +66,21 @@
                 <a href="cart.html" class="btn-view-cart">Vezi detalii</a>
             </div>
         </div>
-    </div>
+        </div>
 
-        <a href="login.html" id="nav-login-btn" class="login-btn">
-            Log In
-        </a>
+        <a href="login.html" id="nav-login-btn" class="login-btn">Log In</a>
 
         <div class="profile-dropdown" id="nav-profile-section" style="display: none;">
-            <a href="#" class="nav-icon">
-                <i data-lucide="user"></i>
-            </a>
-
+            <a href="#" class="nav-icon"><i data-lucide="user"></i></a>
             <div class="dropdown-content">
                 <a href="profile.html"><i data-lucide="user-check" style="width:16px;"></i> Contul meu</a>
                 <a href="orders.html"><i data-lucide="package" style="width:16px;"></i> Comenzile mele</a>
                 <a href="favorites.html"><i data-lucide="heart" style="width:16px;"></i> Favorite</a>
-                
-                <a href="admin-dashboard.html" id="admin-link" style="color: #e74c3c; font-weight: 600; display: none;">
+                  <a href="admin-dashboard.html" id="admin-link" style="color: #e74c3c; font-weight: 600; display: none;">
                     <i data-lucide="shield-alert" style="width:16px;"></i> Admin Panel
                 </a>
-                
-                <hr style="border: 0; border-top: 1px solid #eee; margin: 5px 0;">
-                
-                <a href="javascript:void(0)" id="logout-btn" style="color: #666;">Deconectare</a>
+                <hr>
+                <a href="javascript:void(0)" id="logout-btn">Deconectare</a>
             </div>
         </div>
     </div>
@@ -85,38 +90,74 @@
 </script>
 
 
-   <div class="upd-container">
-        <h2>Actualizare produs</h2>
+   
+<div class="admin-container">
+    <div class="admin-form-card">
+        <div class="form-header">
+            <div class="header-icon"><i data-lucide="edit-3"></i></div>
+            <div>
+                <h2>Actualizare Produs</h2>
+                <p>ID Produs: <span id="display-id" style="font-weight: bold; color: #00a6ff;"></span></p>
+            </div>
+        </div>
 
         <form id="update-form">
-            
-            <label>Nume produs</label>
-            <input type="text" id="productName" required>
+            <div class="form-section">
+                <h3 class="section-title"><i data-lucide="info"></i> Informații Generale</h3>
+                <div class="form-group">
+                    <label>Nume Produs</label>
+                    <input type="text" id="productName" class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <label>Descriere</label>
+                    <textarea id="productDescription" class="form-textarea" rows="4" required></textarea>
+                </div>
+                <div class="form-row-split">
+                    <div class="form-group">
+                        <label>Preț (RON)</label>
+                        <input type="number" id="productPrice" class="form-input" step="0.01" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Status</label>
+                        <select id="available" class="form-select">
+                            <option value="true">Disponibil</option>
+                            <option value="false">Indisponibil</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
 
-            <label>Descriere</label>
-            <textarea id="productDescription" required></textarea>
+            <div class="form-section">
+                <h3 class="section-title"><i data-lucide="layers"></i> Variante & Stoc</h3>
+                <div id="variants-container"></div>
+                <button type="button" class="btn-secondary" onclick="addVariantRow()" style="margin-top:10px;">
+                    <i data-lucide="plus-circle"></i> Adaugă Variantă
+                </button>
+            </div>
+            <div class="form-section">
+                <h3 class="section-title"><i data-lucide="images"></i> Galerie Actuală</h3>
+                <p class="form-helper">Acestea sunt pozele active. Șterge-le pe cele pe care vrei să le înlocuiești.</p>
+                <div id="existing-gallery-container" class="existing-gallery-grid">
+                    </div>
+            </div>
+            <div class="form-section">
+                <h3 class="section-title"><i data-lucide="image-plus"></i> Imagini Noi</h3>
+                <div id="images-upload-container"></div>
+                <button type="button" class="btn-secondary" onclick="addImageRow()" style="margin-top:10px;">
+                    <i data-lucide="image"></i> Mai adaugă o poză
+                </button>
+            </div>
 
-            <label>Preț</label>
-            <input type="number" id="productPrice" required step="0.01">
-
-            <label>Cantitate în stoc</label>
-            <input type="number" id="quantity" required>
-
-            <label>Disponibil</label>
-            <select id="available">
-                <option value="true">Disponibil</option>
-                <option value="false">Indisponibil</option>
-            </select>
-
-            <label>Imagine nouă (opțional)</label>
-            <input type="file" id="imageFile" accept="image/*">
-
-            <button type="submit" class="btn-save">💾 Salvează modificările</button>
+            <div class="form-actions-footer">
+                <a href="shop.html" class="btn-cancel">Renunță</a>
+                <button type="submit" class="btn-primary btn-save">
+                    <i data-lucide="save"></i> Salvează Modificările
+                </button>
+            </div>
         </form>
-
-        <p id="responseMsg" style="margin-top: 15px; font-weight: bold;"></p>
+        <div id="responseMsg"></div>
     </div>
-
+</div>
 
 
 <footer>

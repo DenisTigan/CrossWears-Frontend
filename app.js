@@ -2,14 +2,21 @@ const container = document.getElementById("product-container");
 const addProductPageUrl = "addProduct.html";
 const API_BASE = "http://localhost:8080/api";
 
-// 1. FUNCȚIA DE FILTRARE ȘI CĂUTARE
+// Variabile pentru gestionarea selecției în Modal
+let currentProduct = null;
+let selectedSize = null;
+let selectedColor = null;
+
+// =========================================================
+// 1. LOGICA DE FILTRARE ȘI CĂUTARE
+// =========================================================
+
 function fetchProducts() {
-    // Luăm valorile din input-uri (asigură-te că ID-urile coincid cu cele din HTML)
     const keyword = document.getElementById("search-input") ? document.getElementById("search-input").value : "";
     const minPrice = document.getElementById("min-price") ? document.getElementById("min-price").value : 0;
     const maxPrice = document.getElementById("max-price") ? document.getElementById("max-price").value : 1000000;
 
-    // Apelăm endpoint-ul de search creat anterior
+    // Apelăm endpoint-ul de search adaptat pentru noile produse
     axios.get(`${API_BASE}/products/search`, {
         params: {
             keyword: keyword,
@@ -18,8 +25,7 @@ function fetchProducts() {
         }
     })
     .then(response => {
-        const products = response.data;
-        renderProducts(products); // Apelăm funcția de randare
+        renderProducts(response.data);
     })
     .catch(err => {
         console.error("Eroare la filtrare:", err);
@@ -27,16 +33,24 @@ function fetchProducts() {
     });
 }
 
-// 2. FUNCȚIA DE RANDARE (Curăță și reconstruiește grid-ul)
+// =========================================================
+// 2. LOGICA DE RANDARE (Grid Produse)
+// =========================================================
+
 function renderProducts(products) {
-    container.innerHTML = ""; // Curățăm ce era înainte
+    container.innerHTML = ""; 
 
     products.forEach(p => {
         const card = document.createElement("div");
         card.classList.add("product-card");
 
-        const imageUrl = `${API_BASE}/product/${p.productId}/image`;
-        const isAvailable = p.available === true && p.quantity > 0;
+        // Luăm prima imagine disponibilă pentru thumbnail
+        const thumbId = (p.images && p.images.length > 0) ? p.images[0].imageId : null;
+        const imageUrl = thumbId ? `${API_BASE}/product/image/${thumbId}` : 'placeholder.jpg';
+
+        // Verificăm dacă există orice variantă cu stoc > 0
+        const hasStock = p.variants && p.variants.some(v => v.quantity > 0);
+        const isAvailable = p.available === true && hasStock;
 
         card.innerHTML = `
             <div class="product-img-container">
@@ -57,7 +71,7 @@ function renderProducts(products) {
         
             <div class="product-actions">
                 ${isAvailable
-                    ? `<button class="btn-add-cart" onclick="addToCart(${p.productId})">Adaugă în coș</button>`
+                    ? `<button class="btn-add-cart" onclick="openVariantModal(${p.productId})">Adaugă în coș</button>`
                     : `<button class="btn-out-of-stock" disabled>Stoc epuizat</button>`
                 }
             </div>
@@ -67,38 +81,158 @@ function renderProducts(products) {
         checkIfFavorite(p.productId);
     });
 
-    // Păstrăm logica de Admin: Adăugăm cardul de "Produs Nou" la final
+    // Card pentru Admin
     const role = localStorage.getItem("userRole");
     if (role === "ROLE_ADMIN") {
         const addCard = document.createElement("a");
         addCard.classList.add("add-product-card");
         addCard.href = addProductPageUrl;
-        addCard.innerHTML = `
-            <i class="fas fa-plus"></i>
-            <p>Adaugă Produs Nou</p>
-        `;
+        addCard.innerHTML = `<i class="fas fa-plus"></i><p>Adaugă Produs Nou</p>`;
         container.appendChild(addCard);
     }
 }
 
-// 3. EVENT LISTENERS PENTRU FILTRE
+// =========================================================
+// 3. LOGICA POP-UP (MODAL) PENTRU SELECȚIE
+// =========================================================
+
+async function openVariantModal(productId) {
+    try {
+        const res = await axios.get(`${API_BASE}/product/${productId}`);
+        currentProduct = res.data;
+
+        // Resetăm selecțiile anterioare
+        selectedSize = null;
+        selectedColor = null;
+
+        // Populăm datele de bază în modal
+        document.getElementById("modal-title").innerText = currentProduct.productName;
+        document.getElementById("modal-price").innerText = `${currentProduct.productPrice} RON`;
+        
+        // Imaginea principală
+        const mainImg = document.getElementById("modal-main-img");
+        if(currentProduct.images && currentProduct.images.length > 0) {
+            mainImg.src = `${API_BASE}/product/image/${currentProduct.images[0].imageId}`;
+        }
+
+        // Generăm butoanele de culori unice
+        const colors = [...new Set(currentProduct.variants.map(v => v.color))];
+        const colorContainer = document.getElementById("modal-colors");
+        colorContainer.innerHTML = colors.map(c => 
+            `<button class="btn-color-select" onclick="selectColorInModal('${c}', this)">${c}</button>`
+        ).join("");
+
+        // Mesaj de așteptare pentru mărime
+        document.getElementById("modal-sizes").innerHTML = "<p style='font-size:12px; color:#888;'>Alege o culoare pentru a vedea mărimile.</p>";
+        
+        // Afișăm modalul
+        document.getElementById("variant-modal").style.display = "flex";
+
+    } catch (err) {
+        console.error("Eroare la deschiderea modalului:", err);
+        alert("Nu s-au putut încărca detaliile produsului.");
+    }
+}
+
+function selectColorInModal(color, btn) {
+    selectedColor = color;
+    selectedSize = null; 
+
+    document.querySelectorAll(".btn-color-select").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+
+    // Normalizăm pentru a asigura potrivirea (ex: "Negru" cu "NEGRU")
+    const normalizedColor = color.toLowerCase();
+
+    // --- FILTRARE IMAGINE MODAL ---
+    let colorImg = currentProduct.images.find(img => 
+        (img.color || "").toLowerCase() === normalizedColor
+    );
+
+    if (!colorImg) {
+        colorImg = currentProduct.images.find(img => 
+            (img.color || "").toLowerCase() === 'general'
+        );
+    }
+
+    const mainImg = document.getElementById("modal-main-img");
+    if (colorImg) {
+        mainImg.src = `${API_BASE}/product/image/${colorImg.imageId}`;
+    } else if (currentProduct.images.length > 0) {
+        mainImg.src = `${API_BASE}/product/image/${currentProduct.images[0].imageId}`;
+    }
+
+    // --- FILTRARE MĂRIMI MODAL ---
+    const availableSizes = currentProduct.variants.filter(v => 
+        v.color.toLowerCase() === normalizedColor && v.quantity > 0
+    );
+
+    const sizeContainer = document.getElementById("modal-sizes");
+    if (availableSizes.length > 0) {
+        sizeContainer.innerHTML = availableSizes.map(v => 
+            `<button class="btn-size-select" onclick="selectSizeInModal('${v.size}', this)">${v.size}</button>`
+        ).join("");
+    } else {
+        sizeContainer.innerHTML = "<p style='color:red; font-size:12px;'>Stoc epuizat pentru această culoare.</p>";
+    }
+}
+
+function selectSizeInModal(size, btn) {
+    selectedSize = size;
+    document.querySelectorAll(".btn-size-select").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+}
+
+async function confirmAddToCart() {
+    const token = localStorage.getItem("userToken");
+
+    if (!token) {
+        alert("Autentifică-te pentru a cumpăra!");
+        window.location.href = "login.html";
+        return;
+    }
+
+    if(!selectedColor || !selectedSize) {
+        alert("Te rugăm să alegi culoarea și mărimea!");
+        return;
+    }
+
+    try {
+        await axios.post(`${API_BASE}/cart/add`, {
+            productId: currentProduct.productId,
+            quantity: 1,
+            color: selectedColor,
+            size: selectedSize
+        }, {
+            headers: { 'Authorization': 'Bearer ' + token }
+        });
+
+        alert("Adăugat cu succes!");
+        closeVariantModal();
+        if (typeof updateCartBadge === 'function') updateCartBadge();
+        
+    } catch (error) {
+        alert("Eroare la adăugarea în coș.");
+    }
+}
+
+function closeVariantModal() {
+    document.getElementById("variant-modal").style.display = "none";
+}
+
+// =========================================================
+// 4. FAVORITE ȘI EVENT LISTENERS
+// =========================================================
+
 document.addEventListener("DOMContentLoaded", () => {
-    fetchProducts(); // Încărcare inițială a tuturor produselor
+    fetchProducts();
 
-    // Căutare live pe măsură ce tastezi
     const searchInput = document.getElementById("search-input");
-    if (searchInput) {
-        searchInput.addEventListener("input", fetchProducts);
-    }
+    if (searchInput) searchInput.addEventListener("input", fetchProducts);
 
-    // Filtrare la click pe buton
     const filterBtn = document.getElementById("btn-filter");
-    if (filterBtn) {
-        filterBtn.addEventListener("click", fetchProducts);
-    }
+    if (filterBtn) filterBtn.addEventListener("click", fetchProducts);
 });
-
-// --- FUNCȚII NOI PENTRU FAVORITE ---
 
 function checkIfFavorite(productId) {
     const token = localStorage.getItem("userToken");
@@ -119,39 +253,15 @@ function checkIfFavorite(productId) {
 function toggleFavorite(event, productId, iconElement) {
     event.stopPropagation(); 
     event.preventDefault();
-
     const token = localStorage.getItem("userToken");
-    if (!token) {
-        alert("Trebuie să fii logat pentru a salva produse!");
-        return;
-    }
-
-    // Mică animație
-    iconElement.style.transform = "scale(0.8)";
-    setTimeout(() => iconElement.style.transform = "scale(1)", 200);
+    if (!token) { alert("Loghează-te pentru favorite!"); return; }
 
     axios.post(`${API_BASE}/favorites/toggle/${productId}`, {}, {
         headers: { 'Authorization': 'Bearer ' + token }
     })
     .then(res => {
-        if (res.data === "Added") {
-            iconElement.classList.add("active"); 
-        } else {
-            iconElement.classList.remove("active"); 
-        }
+        if (res.data === "Added") iconElement.classList.add("active"); 
+        else iconElement.classList.remove("active"); 
     })
-    .catch(err => {
-        console.error(err);
-        alert("Eroare la salvare.");
-    });
-}
-
-
-
-
-
-
-function addToCart(id) {
-    // Aici vei implementa logica de coș mai târziu
-    alert("Produs adăugat în coș! ID: " + id);
+    .catch(err => console.error(err));
 }

@@ -5,6 +5,15 @@ const CHAT_API = `${API_BASE}/chat`;
 let selectedClientId = null;
 let adminChatInterval = null;
 
+function toggleAdminMenu() {
+    const sidebar = document.querySelector('.admin-sidebar');
+    const overlay = document.getElementById('sidebar-overlay');
+    if (sidebar && overlay) {
+        sidebar.classList.toggle('active');
+        overlay.classList.toggle('active');
+    }
+}
+
 // =========================================================
 // 1. LOGICA PENTRU COMENZI (NOUĂ)
 // =========================================================
@@ -13,63 +22,32 @@ let adminChatInterval = null;
 function loadOrders() {
     const token = localStorage.getItem("userToken");
     const tbody = document.getElementById("orders-tbody");
-    
-    // Resetăm tabelul
-    tbody.innerHTML = "<tr><td colspan='6' style='text-align:center;'>Se actualizează lista...</td></tr>";
+    tbody.innerHTML = "<tr><td colspan='6' style='text-align:center;'>Se încarcă...</td></tr>";
 
-    axios.get(`${API_BASE}/admin/all`, {
-        headers: { 'Authorization': 'Bearer ' + token }
-    })
+    axios.get(`${API_BASE}/admin/all`, { headers: { 'Authorization': 'Bearer ' + token } })
     .then(res => {
-        const orders = res.data;
-        tbody.innerHTML = ""; // Golim mesajul de încărcare
-
-        if (orders.length === 0) {
-            tbody.innerHTML = "<tr><td colspan='6' style='text-align:center;'>Nu există comenzi.</td></tr>";
-            return;
-        }
-
-        // Sortăm comenzile: cele mai noi primele (după ID descrescător)
-        orders.sort((a, b) => b.id - a.id);
-
-        orders.forEach(order => {
+        tbody.innerHTML = "";
+        res.data.sort((a, b) => b.id - a.id).forEach(order => {
+            const dateStr = new Date(order.orderDate).toLocaleString('ro-RO');
+            const statusClass = order.status.toLowerCase();
             const tr = document.createElement("tr");
-            
-            // Formatare dată (dacă orderDate e string ISO)
-            const dateObj = new Date(order.orderDate);
-            const dateStr = dateObj.toLocaleDateString('ro-RO') + " " + dateObj.toLocaleTimeString('ro-RO', {hour: '2-digit', minute:'2-digit'});
-
-            // Status Styling
-            let statusClass = "pending";
-            if (order.status === "PAID") statusClass = "paid"; // Verde (din CSS-ul tau)
-            if (order.status === "CANCELLED") statusClass = "cancelled"; // Roșu
-
-            // Butoanele apar doar dacă comanda nu e deja Finalizată/Anulată
-            // Sau le lăsăm mereu active dacă vrei să te răzgândești
-            let actionsHtml = '';
-            if (order.status !== 'PAID' && order.status !== 'CANCELLED') {
-                 actionsHtml = `
-                    <button class="btn-small" style="background-color:#28a745; margin-right:5px;" onclick="updateOrderStatus(${order.id}, 'PAID')">Acceptă</button>
-                    <button class="btn-small delete" style="background-color:#dc3545;" onclick="updateOrderStatus(${order.id}, 'CANCELLED')">Refuză</button>
-                 `;
-            } else {
-                actionsHtml = `<span style="color:#888; font-size:12px;">Finalizat</span>`;
-            }
-
             tr.innerHTML = `
-                <td>#${order.id}</td>
-                <td>${order.userEmail}</td>
-                <td>${order.totalAmount} RON</td>
-                <td>${dateStr}</td>
-                <td><span class="badge ${statusClass}">${order.status}</span></td>
-                <td>${actionsHtml}</td>
+                <td data-label="ID">#${order.id}</td>
+                <td data-label="Client"><span>${order.userEmail}</span></td>
+                <td data-label="Total"><strong>${order.totalAmount} RON</strong></td>
+                <td data-label="Data">${dateStr}</td>
+                <td data-label="Status"><span class="badge ${statusClass}">${order.status}</span></td>
+                <td data-label="Acțiuni">
+                    <div style="display: flex; gap: 5px;">
+                        ${order.status === 'PENDING' ? `
+                            <button class="btn-small" style="background-color:#28a745;" onclick="updateOrderStatus(${order.id}, 'PAID')">Acceptă</button>
+                            <button class="btn-small delete" style="background-color:#dc3545;" onclick="updateOrderStatus(${order.id}, 'CANCELLED')">Refuză</button>
+                        ` : '<span style="color:#888;">Finalizat</span>'}
+                    </div>
+                </td>
             `;
             tbody.appendChild(tr);
         });
-    })
-    .catch(err => {
-        console.error("Eroare comenzi:", err);
-        tbody.innerHTML = "<tr><td colspan='6' style='color:red; text-align:center;'>Eroare la încărcarea comenzilor (Verifică consola).</td></tr>";
     });
 }
 
@@ -139,6 +117,19 @@ function loadClientsList() {
     .catch(err => console.error("Eroare lista clienți:", err));
 }
 
+// function selectClient(clientId, clientName, liElement) {
+//     selectedClientId = clientId;
+//     document.querySelectorAll(".chat-user-item").forEach(item => item.classList.remove("active"));
+//     liElement.classList.add("active");
+
+//     document.getElementById("chat-conversation-header").innerHTML = `<span>Conversație cu: <strong>${clientName}</strong></span>`;
+//     document.getElementById("admin-input-container").style.display = "flex";
+
+//     if (adminChatInterval) clearInterval(adminChatInterval);
+//     loadConversation(clientId);
+//     adminChatInterval = setInterval(() => loadConversation(clientId), 3000);
+// }
+
 function selectClient(clientId, clientName, liElement) {
     selectedClientId = clientId;
     document.querySelectorAll(".chat-user-item").forEach(item => item.classList.remove("active"));
@@ -150,6 +141,11 @@ function selectClient(clientId, clientName, liElement) {
     if (adminChatInterval) clearInterval(adminChatInterval);
     loadConversation(clientId);
     adminChatInterval = setInterval(() => loadConversation(clientId), 3000);
+
+    // ADAUGARE SCROLL AUTOMAT PE MOBIL
+    if (window.innerWidth <= 992) {
+        document.querySelector('.chat-main-area').scrollIntoView({ behavior: 'smooth' });
+    }
 }
 
 function loadConversation(clientId) {
@@ -215,49 +211,48 @@ function sendAdminMessage() {
 
 function showSection(sectionId, element) {
     // 1. Ascunde toate secțiunile
-    const sections = document.querySelectorAll('.admin-section');
-    sections.forEach(sec => sec.style.display = 'none');
+    document.querySelectorAll('.admin-section').forEach(sec => {
+        sec.style.display = 'none';
+    });
 
-    // 2. Afișează secțiunea selectată
+    // 2. Afișează secțiunea corectă
     const activeSection = document.getElementById(sectionId);
     if(activeSection) {
         activeSection.style.display = 'block';
     }
 
-    // 3. Actualizează clasa 'active' în sidebar
-    const menuItems = document.querySelectorAll('.sidebar-menu li');
-    menuItems.forEach(item => item.classList.remove('active'));
+    // 3. CURĂȚARE CLASĂ ACTIVE (Elimină dunga de pe TOATE elementele)
+    document.querySelectorAll('.sidebar-menu li').forEach(item => {
+        item.classList.remove('active');
+    });
     
+    // 4. Pune dunga albastră DOAR pe butonul apăsat
     if(element) {
         element.classList.add('active');
     }
 
-    // --- LOGICA DE ÎNCĂRCARE DATE ---
-    if (sectionId === 'dashboard') {
-        updateDashboard(); // <--- Aceasta încarcă statisticile (0 RON, etc)
+    // 5. Încarcă datele (Newsletter are deja apelul aici, deci nu mai trebuie la final)
+    if (sectionId === 'dashboard') updateDashboard();
+    if (sectionId === 'messages') initMessagesSection();
+    if (sectionId === 'orders') loadOrders();
+    if (sectionId === 'products') loadProducts();
+    if (sectionId === 'users') loadUsers();
+    if (sectionId === 'newsletter') loadNewsletterHistory();
+
+    // 6. ÎNCHIDE MENIUL PE MOBIL (Rezolvă problema blocării meniului)
+    if (window.innerWidth <= 992) {
+        const sidebar = document.querySelector('.admin-sidebar');
+        const overlay = document.getElementById('sidebar-overlay');
+        if (sidebar && sidebar.classList.contains('active')) {
+            sidebar.classList.remove('active');
+            overlay.classList.remove('active');
+        }
     }
-    if (sectionId === 'messages') {
-        initMessagesSection();
-    }
-    if (sectionId === 'orders') {
-        loadOrders(); 
-    }
-    if (sectionId === 'products') {
-        loadProducts();
-    }
-    if (sectionId === 'users') {
-        loadUsers();
-    }
-    if (sectionId === 'newsletter') {
-    loadNewsletterHistory(); // Fără această linie, tabelul nu se va popula niciodată!
-}
 }
 
-
 // =========================================================
-// 4. LOGICA PENTRU PRODUSE (NOUĂ)
+// 4. LOGICA PENTRU PRODUSE (ADAPTATĂ PENTRU VARIANTE)
 // =========================================================
-
 
 function loadProducts() {
     const tbody = document.getElementById("products-tbody");
@@ -283,41 +278,56 @@ function loadProducts() {
         products.forEach(product => {
             const tr = document.createElement("tr");
 
-            // 1. URL Imagine
-            const imageUrl = `${API_BASE}/product/${product.productId}/image`;
+            // 1. URL Imagine: Luăm prima imagine din galerie pentru previzualizare
+            // Dacă produsul are imagini, folosim ID-ul primeia, altfel un placeholder
+            let imageUrl = 'https://via.placeholder.com/50?text=No+Img';
+            if (product.images && product.images.length > 0) {
+                imageUrl = `${API_BASE}/product/image/${product.images[0].imageId}`;
+            }
 
-            // 2. Link către pagina publică (Folosim "id")
+            // 2. Generăm vizualizarea stocului pe variante (S, M, L, XL)
+            let variantsHtml = '<div style="font-size: 12px; line-height: 1.4;">';
+            if (product.variants && product.variants.length > 0) {
+                product.variants.forEach(v => {
+                    const colorDot = v.color === 'Alb' ? '⚪' : '⚫';
+                    variantsHtml += `<div>${colorDot} <strong>${v.size}</strong>: ${v.quantity} buc.</div>`;
+                });
+            } else {
+                variantsHtml = '<span style="color: #999;">Fără variante</span>';
+            }
+            variantsHtml += '</div>';
+
             const publicLink = `product.html?id=${product.productId}`;
-
-            // 3. Link către pagina de Update
             const updateLink = `updateProduct.html?id=${product.productId}`;
 
-            tr.innerHTML = `
-                <td>#${product.productId}</td>
-                <td>
-                    <a href="${publicLink}">
-                        <img src="${imageUrl}" 
-                             alt="${product.productName}" 
-                             style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px; border: 1px solid #ddd;"
-                             onerror="this.src='https://via.placeholder.com/50?text=No+Img'">
-                    </a>
-                </td>
-                <td>
-                    <a href="${publicLink}" style="text-decoration: none; color: #333; font-weight: bold;">
-                        ${product.productName}
-                    </a>
-                </td>
-                <td>${product.productPrice} RON</td>
-                <td>${product.quantity} buc.</td>
-                <td>
-                    <a href="${updateLink}" class="btn-small" style="background-color: #00ff4cff; color: white; text-decoration: none; display:inline-block; margin-right:5px; padding: 6px 12px; border-radius: 4px;">
-                        Editează
-                    </a>
-                    <button class="btn-small delete" style="background-color: #dc3545;" onclick="deleteProduct(${product.productId})">
-                        Șterge
-                    </button>
-                </td>
-            `;
+         tr.innerHTML = `
+    <td data-label="ID">#${product.productId}</td>
+    <td data-label="Imagine">
+        <a href="${publicLink}">
+            <img src="${imageUrl}" 
+                 alt="${product.productName}" 
+                 style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px; border: 1px solid #ddd;"
+                 onerror="this.src='https://via.placeholder.com/50?text=No+Img'">
+        </a>
+    </td>
+    <td data-label="Nume">
+        <a href="${publicLink}" style="text-decoration: none; color: #333; font-weight: bold;">
+            ${product.productName}
+        </a>
+    </td>
+    <td data-label="Preț"><span>${product.productPrice} RON</span></td>
+    <td data-label="Stoc">${variantsHtml}</td> 
+    <td data-label="Acțiuni">
+        <div style="display: flex; gap: 5px;">
+            <a href="${updateLink}" class="btn-small" style="background-color: #00ff4cff; color: white; text-decoration: none; display:flex; align-items:center; justify-content:center; padding: 6px 12px; border-radius: 4px; flex: 1;">
+                Editează
+            </a>
+            <button class="btn-small delete" style="background-color: #dc3545; flex: 1;" onclick="deleteProduct(${product.productId})">
+                Șterge
+            </button>
+        </div>
+    </td>
+`;
             tbody.appendChild(tr);
         });
     })
@@ -391,11 +401,15 @@ function loadUsers() {
             }
 
             tr.innerHTML = `
-                <td>${user.id}</td>
-                <td>${user.fullName || "Fără nume"}</td>
-                <td>${user.email}</td>
-                <td>${roleStyle}</td>
-                <td>${actionBtn}</td>
+                <td data-label="ID">${user.id}</td>
+                <td data-label="Nume"><span>${user.fullName || "Fără nume"}</span></td>
+                <td data-label="Email"><span>${user.email}</span></td>
+                <td data-label="Rol">${roleStyle}</td>
+                <td data-label="Acțiuni">
+                    <div style="width: 100%; display: flex; justify-content: flex-start;">
+                        ${actionBtn}
+                    </div>
+                </td>
             `;
             tbody.appendChild(tr);
         });
@@ -474,16 +488,13 @@ document.getElementById("stat-messages").innerText = clientsRes.data.length;
 
 // Setăm Dashboard-ul ca default la încărcare
 document.addEventListener("DOMContentLoaded", () => {
-    // 1. Pornim automat pe Dashboard
+    // Pornește pe Dashboard
     const dashboardLink = document.querySelector('.sidebar-menu li'); 
     showSection('dashboard', dashboardLink);
     
-    // 2. Inițializăm iconițele Lucide (dacă le folosești)
-    if (typeof lucide !== 'undefined') {
-        lucide.createIcons();
-    }
+    if (typeof lucide !== 'undefined') lucide.createIcons();
 
-    // 3. Logică Deconectare
+    // Logică Logout
     const logoutBtn = document.querySelector('.logout-btn');
     if(logoutBtn) {
         logoutBtn.addEventListener('click', () => {
@@ -530,22 +541,21 @@ function handleSendNewsletter() {
 }
 function loadNewsletterHistory() {
     const token = localStorage.getItem("userToken");
+    const tbody = document.getElementById("newsletter-history-tbody");
+    if(!tbody) return;
+
     axios.get(`${API_BASE}/newsletter/admin/history`, {
         headers: { 'Authorization': 'Bearer ' + token }
     })
     .then(res => {
-        const tbody = document.getElementById("newsletter-history-tbody");
         tbody.innerHTML = res.data.map(log => `
             <tr>
-                <td>${new Date(log.sentAt).toLocaleString()}</td>
-                <td>${log.subject}</td>
-                <td>${log.recipientCount} persoane</td>
+                <td data-label="Dată">${new Date(log.sentAt).toLocaleString('ro-RO')}</td>
+                <td data-label="Subiect"><strong>${log.subject}</strong></td>
+                <td data-label="Destinatari">${log.recipientCount} persoane</td>
             </tr>
         `).join('');
-    });
+    })
+    .catch(err => console.error("Eroare istoric:", err));
 }
 
-// Apelează loadNewsletterHistory() în showSection('newsletter')
-if (sectionId === 'newsletter') {
-    loadNewsletterHistory();
-}

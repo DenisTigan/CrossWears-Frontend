@@ -12,8 +12,22 @@
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
 
+<div class="sidebar-overlay" id="sidebar-overlay"></div>
+<div class="mobile-sidebar" id="mobile-sidebar">
+    <div class="sidebar-header" style="background-color: #68c2f3;">
+        <img src="image/logo.png" alt="Logo" style="height: 80px;">
+        <span id="mobile-sidebar-close">&times;</span>
+    </div>
+    <ul class="sidebar-links" id="sidebar-links-container">
+        </ul>
+</div>
+
 <nav class="navbar">
     <div class="nav-left">
+        <div class="hamburger-menu" id="mobile-menu-btn">
+            <i class="fas fa-bars"></i>
+        </div>
+
         <a href="index.html" class="nav-logo">
             <img src="image/logo.png" alt="Logo">
         </a>
@@ -26,13 +40,12 @@
     </div>
 
     <div class="nav-right">
-      <div class="cart-wrapper">
-        <a href="cart.html" class="nav-icon" id="cart-nav-link">
-            <i data-lucide="shopping-cart"></i>
-            <span id="cart-count-badge">0</span>
-        </a>
-
-        <div id="mini-cart-popup" class="mini-cart-popup">
+        <div class="cart-wrapper">
+            <a href="cart.html" class="nav-icon" id="cart-nav-link">
+                <i data-lucide="shopping-cart"></i>
+                <span id="cart-count-badge">0</span>
+            </a>
+              <div id="mini-cart-popup" class="mini-cart-popup">
             <div class="mini-cart-header">Rezumat Coș</div>
             <div id="mini-cart-items" class="mini-cart-body">
                 </div>
@@ -41,29 +54,21 @@
                 <a href="cart.html" class="btn-view-cart">Vezi detalii</a>
             </div>
         </div>
-    </div>
+        </div>
 
-        <a href="login.html" id="nav-login-btn" class="login-btn">
-            Log In
-        </a>
+        <a href="login.html" id="nav-login-btn" class="login-btn">Log In</a>
 
         <div class="profile-dropdown" id="nav-profile-section" style="display: none;">
-            <a href="#" class="nav-icon">
-                <i data-lucide="user"></i>
-            </a>
-
+            <a href="#" class="nav-icon"><i data-lucide="user"></i></a>
             <div class="dropdown-content">
                 <a href="profile.html"><i data-lucide="user-check" style="width:16px;"></i> Contul meu</a>
                 <a href="orders.html"><i data-lucide="package" style="width:16px;"></i> Comenzile mele</a>
                 <a href="favorites.html"><i data-lucide="heart" style="width:16px;"></i> Favorite</a>
-                
-                <a href="admin-dashboard.html" id="admin-link" style="color: #e74c3c; font-weight: 600; display: none;">
+                  <a href="admin-dashboard.html" id="admin-link" style="color: #e74c3c; font-weight: 600; display: none;">
                     <i data-lucide="shield-alert" style="width:16px;"></i> Admin Panel
                 </a>
-                
-                <hr style="border: 0; border-top: 1px solid #eee; margin: 5px 0;">
-                
-                <a href="javascript:void(0)" id="logout-btn" style="color: #666;">Deconectare</a>
+                <hr>
+                <a href="javascript:void(0)" id="logout-btn">Deconectare</a>
             </div>
         </div>
     </div>
@@ -104,15 +109,14 @@
     <div id="review-form-container" class="review-form-container" style="display: none;">
         <h4 style="margin-bottom: 15px;">Spune-ne părerea ta</h4>
         
-        <div>
-            <div class="star-rating">
-                <span class="star" onclick="setRating(1)">&#9733;</span>
-                <span class="star" onclick="setRating(2)">&#9733;</span>
-                <span class="star" onclick="setRating(3)">&#9733;</span>
-                <span class="star" onclick="setRating(4)">&#9733;</span>
-                <span class="star" onclick="setRating(5)">&#9733;</span>
-                <input type="hidden" id="ratingValue" value="5">
-            </div>
+        <div class="star-rating">
+            <span class="star" onclick="setRating(5)">&#9733;</span>
+            <span class="star" onclick="setRating(4)">&#9733;</span>
+            <span class="star" onclick="setRating(3)">&#9733;</span>
+            <span class="star" onclick="setRating(2)">&#9733;</span>
+            <span class="star" onclick="setRating(1)">&#9733;</span>
+            <input type="hidden" id="ratingValue" value="5">
+        </div>
 
             <textarea id="reviewContent" placeholder="Ce ți-a plăcut la acest produs?" required style="width: 100%; padding: 10px; margin-top: 10px; border-radius: 5px; border: 1px solid #ccc;"></textarea>
             
@@ -136,6 +140,8 @@
 
     <div id="suggestions-section">
         </div>
+
+
 
 <footer>
   <div class="container">

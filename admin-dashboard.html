@@ -7,8 +7,11 @@
     <link rel="stylesheet" href="style.css"><script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 </head>
-<body>
 
+
+
+<body>
+<div class="sidebar-overlay" id="sidebar-overlay" onclick="toggleAdminMenu()"></div>
 <div class="admin-wrapper">
     
     <aside class="admin-sidebar">
@@ -44,10 +47,16 @@
 
     <main class="admin-content">
         
-        <header class="admin-topbar">
+       <header class="admin-topbar">
+        <div class="topbar-left" style="display: flex; align-items: center;">
+            <button id="admin-menu-btn" onclick="toggleAdminMenu()" class="menu-toggle" style="background: none; border: none; cursor: pointer; margin-right: 15px;">
+                <i data-lucide="menu"></i>
+            </button>
             <h3>Bun venit, Admin!</h3>
-            <button class="logout-btn">Deconectare</button>
-        </header>
+        </div>
+        
+        <button class="logout-btn">Deconectare</button>
+    </header>
 
       <section id="dashboard" class="admin-section active-section">
     <h1>Statistici Generale</h1>
@@ -104,14 +113,13 @@
     <div class="table-container">
         <table>
             <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Imagine</th>
-                    <th>Nume Produs</th>
-                    <th>Preț</th>
-                    <th>Stoc</th>
-                    <th>Acțiuni</th>
-                </tr>
+                    <tr>
+                        <th>ID</th>
+                        <th>Imagine</th>
+                        <th>Nume Produs</th>
+                        <th>Preț</th>
+                        <th>Stoc (Mărime/Culoare)</th> <th>Acțiuni</th>
+                    </tr>
             </thead>
             <tbody id="products-tbody">
                 <tr><td colspan="6" style="text-align:center;">Se încarcă produsele...</td></tr>

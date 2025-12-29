@@ -13,27 +13,40 @@
 
 <body>
 
+<div class="sidebar-overlay" id="sidebar-overlay"></div>
+<div class="mobile-sidebar" id="mobile-sidebar">
+    <div class="sidebar-header" style="background-color: #68c2f3;">
+        <img src="image/logo.png" alt="Logo" style="height: 80px;">
+        <span id="mobile-sidebar-close">&times;</span>
+    </div>
+    <ul class="sidebar-links" id="sidebar-links-container">
+        </ul>
+</div>
+
 <nav class="navbar">
     <div class="nav-left">
+        <div class="hamburger-menu" id="mobile-menu-btn">
+            <i class="fas fa-bars"></i>
+        </div>
+
         <a href="index.html" class="nav-logo">
             <img src="image/logo.png" alt="Logo">
         </a>
 
         <ul class="nav-links">
             <li><a href="index.html">Home</a></li>
-            <li><a href="shop.html">Shop</a></li>
+            <li><a href="shop.html" class="active">Shop</a></li>
             <li><a href="contact.html">Contact</a></li>
         </ul>
     </div>
 
     <div class="nav-right">
-      <div class="cart-wrapper">
-        <a href="cart.html" class="nav-icon" id="cart-nav-link">
-            <i data-lucide="shopping-cart"></i>
-            <span id="cart-count-badge">0</span>
-        </a>
-
-        <div id="mini-cart-popup" class="mini-cart-popup">
+        <div class="cart-wrapper">
+            <a href="cart.html" class="nav-icon" id="cart-nav-link">
+                <i data-lucide="shopping-cart"></i>
+                <span id="cart-count-badge">0</span>
+            </a>
+              <div id="mini-cart-popup" class="mini-cart-popup">
             <div class="mini-cart-header">Rezumat Coș</div>
             <div id="mini-cart-items" class="mini-cart-body">
                 </div>
@@ -42,29 +55,21 @@
                 <a href="cart.html" class="btn-view-cart">Vezi detalii</a>
             </div>
         </div>
-    </div>
+        </div>
 
-        <a href="login.html" id="nav-login-btn" class="login-btn">
-            Log In
-        </a>
+        <a href="login.html" id="nav-login-btn" class="login-btn">Log In</a>
 
         <div class="profile-dropdown" id="nav-profile-section" style="display: none;">
-            <a href="#" class="nav-icon">
-                <i data-lucide="user"></i>
-            </a>
-
+            <a href="#" class="nav-icon"><i data-lucide="user"></i></a>
             <div class="dropdown-content">
                 <a href="profile.html"><i data-lucide="user-check" style="width:16px;"></i> Contul meu</a>
                 <a href="orders.html"><i data-lucide="package" style="width:16px;"></i> Comenzile mele</a>
                 <a href="favorites.html"><i data-lucide="heart" style="width:16px;"></i> Favorite</a>
-                
-                <a href="admin-dashboard.html" id="admin-link" style="color: #e74c3c; font-weight: 600; display: none;">
+                  <a href="admin-dashboard.html" id="admin-link" style="color: #e74c3c; font-weight: 600; display: none;">
                     <i data-lucide="shield-alert" style="width:16px;"></i> Admin Panel
                 </a>
-                
-                <hr style="border: 0; border-top: 1px solid #eee; margin: 5px 0;">
-                
-                <a href="javascript:void(0)" id="logout-btn" style="color: #666;">Deconectare</a>
+                <hr>
+                <a href="javascript:void(0)" id="logout-btn">Deconectare</a>
             </div>
         </div>
     </div>

@@ -22,8 +22,22 @@
 <link rel="stylesheet" href="style.css">
 <script src="https://unpkg.com/lucide@latest"></script>
 
+<div class="sidebar-overlay" id="sidebar-overlay"></div>
+<div class="mobile-sidebar" id="mobile-sidebar">
+    <div class="sidebar-header" style="background-color: #68c2f3;">
+        <img src="image/logo.png" alt="Logo" style="height: 80px;">
+        <span id="mobile-sidebar-close">&times;</span>
+    </div>
+    <ul class="sidebar-links" id="sidebar-links-container">
+        </ul>
+</div>
+
 <nav class="navbar">
     <div class="nav-left">
+        <div class="hamburger-menu" id="mobile-menu-btn">
+            <i class="fas fa-bars"></i>
+        </div>
+
         <a href="index.html" class="nav-logo">
             <img src="image/logo.png" alt="Logo">
         </a>
@@ -36,13 +50,12 @@
     </div>
 
     <div class="nav-right">
-      <div class="cart-wrapper">
-        <a href="cart.html" class="nav-icon" id="cart-nav-link">
-            <i data-lucide="shopping-cart"></i>
-            <span id="cart-count-badge">0</span>
-        </a>
-
-        <div id="mini-cart-popup" class="mini-cart-popup">
+        <div class="cart-wrapper">
+            <a href="cart.html" class="nav-icon" id="cart-nav-link">
+                <i data-lucide="shopping-cart"></i>
+                <span id="cart-count-badge">0</span>
+            </a>
+              <div id="mini-cart-popup" class="mini-cart-popup">
             <div class="mini-cart-header">Rezumat Coș</div>
             <div id="mini-cart-items" class="mini-cart-body">
                 </div>
@@ -51,33 +64,26 @@
                 <a href="cart.html" class="btn-view-cart">Vezi detalii</a>
             </div>
         </div>
-    </div>
+        </div>
 
-        <a href="login.html" id="nav-login-btn" class="login-btn">
-            Log In
-        </a>
+        <a href="login.html" id="nav-login-btn" class="login-btn">Log In</a>
 
         <div class="profile-dropdown" id="nav-profile-section" style="display: none;">
-            <a href="#" class="nav-icon">
-                <i data-lucide="user"></i>
-            </a>
-
+            <a href="#" class="nav-icon"><i data-lucide="user"></i></a>
             <div class="dropdown-content">
                 <a href="profile.html"><i data-lucide="user-check" style="width:16px;"></i> Contul meu</a>
                 <a href="orders.html"><i data-lucide="package" style="width:16px;"></i> Comenzile mele</a>
                 <a href="favorites.html"><i data-lucide="heart" style="width:16px;"></i> Favorite</a>
-                
-                <a href="admin-dashboard.html" id="admin-link" style="color: #e74c3c; font-weight: 600; display: none;">
+                  <a href="admin-dashboard.html" id="admin-link" style="color: #e74c3c; font-weight: 600; display: none;">
                     <i data-lucide="shield-alert" style="width:16px;"></i> Admin Panel
                 </a>
-                
-                <hr style="border: 0; border-top: 1px solid #eee; margin: 5px 0;">
-                
-                <a href="javascript:void(0)" id="logout-btn" style="color: #666;">Deconectare</a>
+                <hr>
+                <a href="javascript:void(0)" id="logout-btn">Deconectare</a>
             </div>
         </div>
     </div>
 </nav>
+
 
 
 <script>
@@ -85,37 +91,77 @@
 </script>
 
     <main>
-   <div class="add-container"> 
-        <h2>Adaugă Produs Nou</h2> 
+  <div class="add-container"> 
+    <h2>Adaugă Produs Nou (Configurație Complexă)</h2> 
 
-        <form id="addProductForm"> 
-            
-            <label for="productName">Nume produs</label>
-            <input type="text" id="productName" required>
+    <form id="addProductForm"> 
+        <label for="productName">Nume produs</label>
+        <input type="text" id="productName" required>
 
-            <label for="productDescription">Descriere</label>
-            <textarea id="productDescription" required></textarea>
+        <label for="productDescription">Descriere</label>
+        <textarea id="productDescription" required></textarea>
 
-            <label for="productPrice">Preț</label>
-            <input type="number" id="productPrice" required step="0.01">
+        <label for="productPrice">Preț (RON)</label>
+        <input type="number" id="productPrice" required step="0.01">
 
-            <label for="quantity">Cantitate în stoc</label>
-            <input type="number" id="quantity" required>
+        <label for="available">Disponibilitate Generală</label>
+        <select id="available">
+            <option value="true">Disponibil</option>
+            <option value="false">Indisponibil</option>
+        </select>
 
-            <label for="available">Disponibil</label>
-            <select id="available">
-                <option value="true">Disponibil</option>
-                <option value="false">Indisponibil</option>
-            </select>
+        <hr style="margin: 20px 0; border-top: 1px dashed #ccc;">
 
-            <label for="imageFile">Imagine produs</label>
-            <input type="file" id="imageFile" accept="image/*" required>
+        <h3>Stoc pe Mărimi și Culori</h3>
+        <table class="admin-variant-table" style="width: 100%; margin-bottom: 20px; border-collapse: collapse;">
+            <thead>
+                <tr style="background: #f4f4f4;">
+                    <th style="padding: 10px; border: 1px solid #ddd;">Culoare</th>
+                    <th style="border: 1px solid #ddd;">S</th>
+                    <th style="border: 1px solid #ddd;">M</th>
+                    <th style="border: 1px solid #ddd;">L</th>
+                    <th style="border: 1px solid #ddd;">XL</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td style="padding: 10px; border: 1px solid #ddd;"><strong>Alb</strong></td>
+                    <td style="border: 1px solid #ddd;"><input type="number" class="stock-input" data-color="Alb" data-size="S" value="0" style="width: 50px;"></td>
+                    <td style="border: 1px solid #ddd;"><input type="number" class="stock-input" data-color="Alb" data-size="M" value="0" style="width: 50px;"></td>
+                    <td style="border: 1px solid #ddd;"><input type="number" class="stock-input" data-color="Alb" data-size="L" value="0" style="width: 50px;"></td>
+                    <td style="border: 1px solid #ddd;"><input type="number" class="stock-input" data-color="Alb" data-size="XL" value="0" style="width: 50px;"></td>
+                </tr>
+                <tr>
+                    <td style="padding: 10px; border: 1px solid #ddd;"><strong>Negru</strong></td>
+                    <td style="border: 1px solid #ddd;"><input type="number" class="stock-input" data-color="Negru" data-size="S" value="0" style="width: 50px;"></td>
+                    <td style="border: 1px solid #ddd;"><input type="number" class="stock-input" data-color="Negru" data-size="M" value="0" style="width: 50px;"></td>
+                    <td style="border: 1px solid #ddd;"><input type="number" class="stock-input" data-color="Negru" data-size="L" value="0" style="width: 50px;"></td>
+                    <td style="border: 1px solid #ddd;"><input type="number" class="stock-input" data-color="Negru" data-size="XL" value="0" style="width: 50px;"></td>
+                </tr>
+            </tbody>
+        </table>
 
-            <button type="submit" class="btn-add">Adaugă produs</button> 
-        </form>
+        <hr style="margin: 20px 0; border-top: 1px dashed #ccc;">
 
-        <p id="msg" style="margin-top: 15px; font-weight: bold;"></p>
-    </div>
+        <h3>Galerie Imagini (2 poze per culoare)</h3>
+        <div id="imageInputsContainer">
+            <div class="image-upload-row" style="margin-bottom: 10px; display: flex; gap: 10px; align-items: center;">
+                <input type="file" class="image-file-input" accept="image/*" required>
+                <select class="image-color-select">
+                    <option value="Alb">Culoare: Alb</option>
+                    <option value="Negru">Culoare: Negru</option>
+                </select>
+            </div>
+        </div>
+        <button type="button" onclick="addImageRow()" style="background: #666; color: white; border: none; padding: 5px 10px; cursor: pointer; border-radius: 4px; margin-bottom: 20px;">
+            + Adaugă încă o poză
+        </button>
+
+        <button type="submit" class="btn-add">Salvează Produsul Complet</button> 
+    </form>
+
+    <p id="msg" style="margin-top: 15px; font-weight: bold;"></p>
+</div>
     </main>
 
 <footer>
