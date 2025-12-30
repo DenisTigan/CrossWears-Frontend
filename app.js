@@ -38,8 +38,23 @@ function fetchProducts() {
 // =========================================================
 
 function renderProducts(products) {
+    // 1. Curățăm containerul
     container.innerHTML = ""; 
 
+    // 2. VERIFICARE DE SIGURANȚĂ: Prevenim eroarea "forEach is not a function"
+    // Dacă backend-ul trimite o eroare (obiect) în loc de listă, afișăm un mesaj prietenos
+    if (!Array.isArray(products)) {
+        console.error("Eroare: Backend-ul nu a trimis o listă de produse. Date primite:", products);
+        container.innerHTML = `
+            <div style="grid-column: 1/-1; text-align: center; padding: 20px;">
+                <p style="color:orange; font-weight: bold;">Se încarcă produsele sau serverul se trezește...</p>
+                <p style="font-size: 12px; color: #666;">Dacă durează mai mult de 1 minut, verifică conexiunea la baza de date.</p>
+            </div>
+        `;
+        return; // Oprim execuția aici pentru a nu mai ajunge la .forEach
+    }
+
+    // 3. LOGICA DE RANDARE (doar dacă avem o listă validă)
     products.forEach(p => {
         const card = document.createElement("div");
         card.classList.add("product-card");
@@ -48,7 +63,7 @@ function renderProducts(products) {
         const thumbId = (p.images && p.images.length > 0) ? p.images[0].imageId : null;
         const imageUrl = thumbId ? `${API_BASE}/product/image/${thumbId}` : 'placeholder.jpg';
 
-        // Verificăm dacă există orice variantă cu stoc > 0
+        // Verificăm stocul și disponibilitatea
         const hasStock = p.variants && p.variants.some(v => v.quantity > 0);
         const isAvailable = p.available === true && hasStock;
 
@@ -81,7 +96,7 @@ function renderProducts(products) {
         checkIfFavorite(p.productId);
     });
 
-    // Card pentru Admin
+    // 4. Card special pentru Admin
     const role = localStorage.getItem("userRole");
     if (role === "ROLE_ADMIN") {
         const addCard = document.createElement("a");
@@ -91,7 +106,6 @@ function renderProducts(products) {
         container.appendChild(addCard);
     }
 }
-
 // =========================================================
 // 3. LOGICA POP-UP (MODAL) PENTRU SELECȚIE
 // =========================================================
