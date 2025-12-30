@@ -1,6 +1,6 @@
 // --- CONSTANTE GLOBALE ---
-const API_BASE_GENERAL = "http://localhost:8080/api";
-const CHAT_API = "http://localhost:8080/api/chat";
+const API_BASE_GENERAL = `${API_URL}/api`;
+const CHAT_API = `${API_URL}/api/chat`;
 
 // ==========================================
 // 1. LOGICA DE INIȚIALIZARE (Login/Logout/UI)
@@ -219,7 +219,7 @@ async function addToCart(productId) {
     }
 
     try {
-        const response = await axios.post("http://localhost:8080/api/cart/add", {
+        const response = await axios.post(`${API_URL}/api/cart/add`, {
             productId: productId,
             quantity: 1
         }, {
@@ -258,7 +258,7 @@ async function updateCartPopupData() {
     if (!token) return;
 
     try {
-        const response = await axios.get("http://localhost:8080/api/cart", {
+        const response = await axios.get(`${API_URL}/api/cart`, {
             headers: { 'Authorization': 'Bearer ' + token }
         });
 
@@ -373,7 +373,7 @@ function subscribeNewsletter() {
         return;
     }
 
-    axios.post("http://localhost:8080/api/newsletter/subscribe", { email: email })
+    axios.post(`${API_URL}/api/newsletter/subscribe`, { email: email })
         .then(res => {
             alert("Te-ai abonat cu succes!");
             emailInput.value = "";

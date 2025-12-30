@@ -1,6 +1,6 @@
 const container = document.getElementById("favorites-container");
 const emptyMsg = document.getElementById("empty-msg");
-const API_BASE = "http://localhost:8080/api";
+const API_BASE = `${API_URL}/api`;
 
 document.addEventListener("DOMContentLoaded", () => {
     loadFavorites();

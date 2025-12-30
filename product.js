@@ -1,7 +1,7 @@
 const urlParams = new URLSearchParams(window.location.search);
 const productId = urlParams.get("id");
 const container = document.getElementById("product-details");
-const API_BASE = "http://localhost:8080/api";
+const API_BASE = `${API_URL}/api`;
 
 // Starea Globală
 let currentProduct = null;
@@ -331,7 +331,7 @@ async function processAddToCart() {
     };
 
     try {
-        await axios.post("http://localhost:8080/api/cart/add", cartRequest, {
+        await axios.post(`${API_URL}/api/cart/add`, cartRequest, {
             headers: { 'Authorization': 'Bearer ' + token }
         });
 

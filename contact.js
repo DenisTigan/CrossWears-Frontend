@@ -22,7 +22,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 message: document.getElementById('message').value
             };
 
-            axios.post('http://localhost:8080/api/contact/send', contactData)
+            axios.post(`${API_URL}/api/contact/send`, contactData)
                 .then(response => {
                     // 1. Notificăm utilizatorul
                     alert("Mesajul tău a fost trimis cu succes! ✉️");
@@ -70,7 +70,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 message: document.getElementById('message').value
             };
 
-            axios.post('http://localhost:8080/api/contact/send', contactData)
+            axios.post(`${API_URL}/api/contact/send`, contactData)
                 .then(response => {
                     alert("Mesajul tău a fost trimis cu succes! ✉️");
                     contactForm.reset(); 

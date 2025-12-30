@@ -78,7 +78,7 @@ document.getElementById("addProductForm").addEventListener("submit", async (e) =
         msg.style.color = "orange";
 
         const response = await axios.post(
-            "http://localhost:8080/api/product",
+            `${API_URL}/api/product`,
             formData,
             { 
                 headers: { 

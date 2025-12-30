@@ -1,6 +1,6 @@
 const container = document.getElementById("product-container");
 const addProductPageUrl = "addProduct.html";
-const API_BASE = "http://localhost:8080/api";
+const API_BASE = `${API_URL}/api`;
 
 // Variabile pentru gestionarea selecției în Modal
 let currentProduct = null;

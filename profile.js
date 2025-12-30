@@ -1,6 +1,12 @@
 document.addEventListener("DOMContentLoaded", () => {
     loadProfileData();
+
+    const profileImg = document.getElementById('profile-image');
+    if (profileImg) {
+        profileImg.src = `${API_URL}/api/user/avatar`;
+    }
 });
+
 
 // 1. Încărcare date profil (Afișează Nume, Email, Telefon, Adresă, Badge)
 function loadProfileData() {
@@ -13,7 +19,7 @@ function loadProfileData() {
     const authHeaders = { 'Authorization': 'Bearer ' + token };
 
     // 1. Prima cerere: Datele text ale profilului
-    axios.get("http://localhost:8080/api/user/me", {
+    axios.get(`${API_URL}/api/user/me`, {
         headers: authHeaders
     })
     .then(res => {
@@ -45,7 +51,7 @@ function loadProfileData() {
 
         // 2. A doua cerere: Imaginea de profil (Securizată)
         // Folosim responseType: 'blob' pentru a primi datele binare ale imaginii
-        return axios.get("http://localhost:8080/api/user/avatar", {
+        return axios.get(`${API_URL}/api/user/avatar`, {
             headers: authHeaders,
             responseType: 'blob'
         });
@@ -90,7 +96,7 @@ function updateProfileInfo() {
         address: document.getElementById("edit-address").value
     };
 
-    axios.put("http://localhost:8080/api/user/update", data, {
+    axios.put(`${API_URL}/api/user/update`, data, {
         headers: { 'Authorization': 'Bearer ' + token }
     })
     .then(() => {
@@ -115,7 +121,7 @@ function uploadAvatarFile() {
 
     const token = localStorage.getItem("userToken");
 
-    axios.post("http://localhost:8080/api/user/upload-avatar", formData, {
+    axios.post(`${API_URL}/api/user/upload-avatar`, formData, {
         headers: { 
             'Authorization': 'Bearer ' + token,
             'Content-Type': 'multipart/form-data' 
@@ -134,12 +140,13 @@ function uploadAvatarFile() {
     });
 }
 
+
 function toggleNewsletter() {
     const token = localStorage.getItem("userToken");
     if (!token) return;
 
     // Trimitem cererea către noul endpoint sincronizat (cel cu @Transactional)
-    axios.put("http://localhost:8080/api/user/newsletter-toggle", {}, {
+    axios.put(`${API_URL}/api/user/newsletter-toggle`, {}, {
         headers: { 'Authorization': 'Bearer ' + token }
     })
     .then(res => {
@@ -158,7 +165,7 @@ function toggleNewsletter() {
 function subscribeNewsletter() {
     const email = document.getElementById("footer-email").value;
     
-    axios.post("http://localhost:8080/api/newsletter/subscribe", { email: email })
+    axios.post(`${API_URL}/api/newsletter/subscribe`, { email: email })
     .then(res => {
         alert("Te-ai abonat!");
         
@@ -182,7 +189,7 @@ function changePassword() {
         return;
     }
 
-    axios.put("http://localhost:8080/api/user/change-password", data, {
+    axios.put(`${API_URL}/api/user/change-password`, data, {
         headers: { 'Authorization': 'Bearer ' + token }
     })
     .then(res => {
@@ -198,7 +205,7 @@ function removeAvatar() {
 
     const token = localStorage.getItem("userToken");
     
-    axios.delete("http://localhost:8080/api/user/delete-avatar", {
+    axios.delete(`${API_URL}/api/user/delete-avatar`, {
         headers: { 'Authorization': 'Bearer ' + token }
     })
     .then(() => {

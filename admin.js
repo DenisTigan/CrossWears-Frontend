@@ -1,4 +1,4 @@
-const API_BASE = "http://localhost:8080/api";
+const API_BASE = `${API_URL}/api`;
 const CHAT_API = `${API_BASE}/chat`;
 
 // --- VARIABILE PENTRU CHAT (NU LE ATINGEM) ---

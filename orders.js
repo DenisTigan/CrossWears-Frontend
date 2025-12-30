@@ -12,7 +12,7 @@ function loadMyOrders() {
     }
 
     // Endpoint-ul creat la Pasul 1
-    axios.get("http://localhost:8080/api/my-orders", {
+    axios.get(`${API_URL}/api/my-orders`, {
         headers: { 'Authorization': 'Bearer ' + token }
     })
     .then(res => {

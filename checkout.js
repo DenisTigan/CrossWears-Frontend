@@ -1,4 +1,4 @@
-const API_URL = "http://localhost:8080/api";
+const API_URL = `${API_URL}/api`;
 let cartSubtotal = 0; // Reținem prețul produselor fără transport
 document.addEventListener('DOMContentLoaded', () => {
     // 1. Verificăm dacă userul e logat

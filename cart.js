@@ -22,7 +22,7 @@ async function loadCart() {
     if (guestMsg) guestMsg.style.display = "none";
 
     try {
-        const response = await axios.get("http://localhost:8080/api/cart", {
+        const response = await axios.get(`${API_URL}/api/cart`, {
             headers: { 'Authorization': 'Bearer ' + token }
         });
 
@@ -50,7 +50,7 @@ async function loadCart() {
                 colorImg = item.product.images[0];
             }
 
-            const imgUrl = colorImg ? `http://localhost:8080/api/product/image/${colorImg.imageId}` : 'placeholder.jpg';
+            const imgUrl = colorImg ? `${API_URL}/api/product/image/${colorImg.imageId}` : 'placeholder.jpg';
 
             const row = document.createElement("tr");
             
@@ -91,7 +91,7 @@ async function removeFromCart(itemId) {
     const token = localStorage.getItem("userToken");
 
     try {
-        await axios.delete(`http://localhost:8080/api/cart/remove/${itemId}`, {
+        await axios.delete(`${API_URL}/api/cart/remove/${itemId}`, {
             headers: { 'Authorization': 'Bearer ' + token }
         });
 

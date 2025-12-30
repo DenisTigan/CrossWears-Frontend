@@ -1,6 +1,6 @@
 const urlParams = new URLSearchParams(window.location.search);
 const productId = urlParams.get("id");
-const API_BASE = "http://localhost:8080/api";
+const API_BASE = `${API_URL}/api`;
 const msg = document.getElementById("responseMsg");
 
 document.addEventListener("DOMContentLoaded", () => {
